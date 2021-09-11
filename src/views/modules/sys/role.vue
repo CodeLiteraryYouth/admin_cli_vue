@@ -23,11 +23,17 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="roleId"
+        prop="id"
         header-align="center"
         align="center"
         width="80"
         label="ID">
+      </el-table-column>
+      <el-table-column
+        prop="roleCode"
+        header-align="center"
+        align="center"
+        label="角色编码">
       </el-table-column>
       <el-table-column
         prop="roleName"
@@ -36,10 +42,10 @@
         label="角色名称">
       </el-table-column>
       <el-table-column
-        prop="remark"
+        prop="roleDesc"
         header-align="center"
         align="center"
-        label="备注">
+        label="角色描述">
       </el-table-column>
       <el-table-column
         prop="createTime"
@@ -55,18 +61,18 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button v-if="isAuth('sys:role:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.roleId)">修改</el-button>
-          <el-button v-if="isAuth('sys:role:delete')" type="text" size="small" @click="deleteHandle(scope.row.roleId)">删除</el-button>
+          <el-button v-if="isAuth('sys:role:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
+          <el-button v-if="isAuth('sys:role:delete')" type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <el-pagination
       @size-change="sizeChangeHandle"
       @current-change="currentChangeHandle"
-      :current-page="pageIndex"
+      :current-page="pageNum"
       :page-sizes="[10, 20, 50, 100]"
       :page-size="pageSize"
-      :total="totalPage"
+      :total="total"
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
@@ -82,10 +88,10 @@
         dataForm: {
           roleName: ''
         },
-        dataList: [],
-        pageIndex: 1,
+        list: [],
+        pageNum: 1,
         pageSize: 10,
-        totalPage: 0,
+        total: 0,
         dataListLoading: false,
         dataListSelections: [],
         addOrUpdateVisible: false
@@ -105,14 +111,14 @@
           url: this.$http.adornUrl('/sys/role/list'),
           method: 'get',
           params: this.$http.adornParams({
-            'page': this.pageIndex,
+            'page': this.pageNum,
             'limit': this.pageSize,
-            'roleName': this.dataForm.roleName
+            'searchVal': this.dataForm.searchVal
           })
         }).then(({data}) => {
-          if (data && data.code === 0) {
-            this.dataList = data.page.list
-            this.totalPage = data.page.totalCount
+          if (data && data.code === 200) {
+            this.dataList = data.list
+            this.totalPage = data.total
           } else {
             this.dataList = []
             this.totalPage = 0
@@ -123,12 +129,12 @@
       // 每页数
       sizeChangeHandle (val) {
         this.pageSize = val
-        this.pageIndex = 1
+        this.pageNum = 1
         this.getDataList()
       },
       // 当前页
       currentChangeHandle (val) {
-        this.pageIndex = val
+        this.pageNum = val
         this.getDataList()
       },
       // 多选
@@ -145,7 +151,7 @@
       // 删除
       deleteHandle (id) {
         var ids = id ? [id] : this.dataListSelections.map(item => {
-          return item.roleId
+          return item.id
         })
         this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
           confirmButtonText: '确定',
@@ -154,7 +160,7 @@
         }).then(() => {
           this.$http({
             url: this.$http.adornUrl('/sys/role/delete'),
-            method: 'post',
+            method: 'delete',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {
             if (data && data.code === 0) {

@@ -11,7 +11,7 @@
       </el-form-item>
     </el-form>
     <el-table
-      :data="dataList"
+      :data="list"
       border
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
@@ -23,7 +23,7 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="userId"
+        prop="id"
         header-align="center"
         align="center"
         width="80"
@@ -34,6 +34,12 @@
         header-align="center"
         align="center"
         label="用户名">
+      </el-table-column>
+      <el-table-column
+        prop="nickName"
+        header-align="center"
+        align="center"
+        label="姓名">
       </el-table-column>
       <el-table-column
         prop="email"
@@ -48,12 +54,12 @@
         label="手机号">
       </el-table-column>
       <el-table-column
-        prop="status"
+        prop="locked"
         header-align="center"
         align="center"
         label="状态">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.status === 0" size="small" type="danger">禁用</el-tag>
+          <el-tag v-if="scope.row.locked === true" size="small" type="danger">禁用</el-tag>
           <el-tag v-else size="small">正常</el-tag>
         </template>
       </el-table-column>
@@ -71,18 +77,18 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button v-if="isAuth('sys:user:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.userId)">修改</el-button>
-          <el-button v-if="isAuth('sys:user:delete')" type="text" size="small" @click="deleteHandle(scope.row.userId)">删除</el-button>
+          <el-button v-if="isAuth('sys:user:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
+          <el-button v-if="isAuth('sys:user:delete')" type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <el-pagination
       @size-change="sizeChangeHandle"
       @current-change="currentChangeHandle"
-      :current-page="pageIndex"
+      :current-page="pageNum"
       :page-sizes="[10, 20, 50, 100]"
       :page-size="pageSize"
-      :total="totalPage"
+      :total="total"
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
@@ -96,12 +102,12 @@
     data () {
       return {
         dataForm: {
-          userName: ''
+          searchVal: ''
         },
-        dataList: [],
-        pageIndex: 1,
+        list: [],
+        pageNum: 1,
         pageSize: 10,
-        totalPage: 0,
+        total: 0,
         dataListLoading: false,
         dataListSelections: [],
         addOrUpdateVisible: false
@@ -121,17 +127,17 @@
           url: this.$http.adornUrl('/sys/user/list'),
           method: 'get',
           params: this.$http.adornParams({
-            'page': this.pageIndex,
+            'page': this.pageNum,
             'limit': this.pageSize,
-            'username': this.dataForm.userName
+            'searchVal': this.dataForm.searchVal
           })
         }).then(({data}) => {
-          if (data && data.code === 0) {
-            this.dataList = data.page.list
-            this.totalPage = data.page.totalCount
+          if (data && data.code === 200) {
+            this.list = data.list
+            this.total = data.total
           } else {
-            this.dataList = []
-            this.totalPage = 0
+            this.list = []
+            this.total = 0
           }
           this.dataListLoading = false
         })
@@ -139,12 +145,12 @@
       // 每页数
       sizeChangeHandle (val) {
         this.pageSize = val
-        this.pageIndex = 1
+        this.pageNum = 1
         this.getDataList()
       },
       // 当前页
       currentChangeHandle (val) {
-        this.pageIndex = val
+        this.pageNum = val
         this.getDataList()
       },
       // 多选
@@ -160,20 +166,20 @@
       },
       // 删除
       deleteHandle (id) {
-        var userIds = id ? [id] : this.dataListSelections.map(item => {
-          return item.userId
+        var ids = id ? [id] : this.dataListSelections.map(item => {
+          return item.id
         })
-        this.$confirm(`确定对[id=${userIds.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
+        this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           this.$http({
             url: this.$http.adornUrl('/sys/user/delete'),
-            method: 'post',
-            data: this.$http.adornData(userIds, false)
+            method: 'delete',
+            data: this.$http.adornData(ids, false)
           }).then(({data}) => {
-            if (data && data.code === 0) {
+            if (data && data.code === 200) {
               this.$message({
                 message: '操作成功',
                 type: 'success',

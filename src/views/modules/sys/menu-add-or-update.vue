@@ -78,7 +78,6 @@
 </template>
 
 <script>
-  import { treeDataTranslate } from '@/utils'
   import Icon from '@/icons'
   export default {
     data () {
@@ -93,14 +92,13 @@
         visible: false,
         dataForm: {
           id: 0,
-          type: 1,
+          permissionType: 1,
           typeList: ['目录', '菜单', '按钮'],
-          name: '',
+          permissionName: '',
           parentId: 0,
-          parentName: '',
-          url: '',
-          perms: '',
-          orderNum: 0,
+          permissionUrl: '',
+          permissionStr: '',
+          permissionOrder: 0,
           icon: '',
           iconList: []
         },
@@ -108,16 +106,13 @@
           name: [
             { required: true, message: '菜单名称不能为空', trigger: 'blur' }
           ],
-          parentName: [
-            { required: true, message: '上级菜单不能为空', trigger: 'change' }
-          ],
           url: [
             { validator: validateUrl, trigger: 'blur' }
           ]
         },
         menuList: [],
         menuListTreeProps: {
-          label: 'name',
+          label: 'permissionName',
           children: 'children'
         }
       }
@@ -133,7 +128,7 @@
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {
-          this.menuList = treeDataTranslate(data.menuList, 'menuId')
+          this.menuList = data
         }).then(() => {
           this.visible = true
           this.$nextTick(() => {
@@ -150,8 +145,8 @@
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
-              this.dataForm.id = data.menu.menuId
-              this.dataForm.type = data.menu.type
+              this.dataForm.id = data.id
+              this.dataForm.permissionType = data.permissionType
               this.dataForm.name = data.menu.name
               this.dataForm.parentId = data.menu.parentId
               this.dataForm.url = data.menu.url
@@ -165,13 +160,11 @@
       },
       // 菜单树选中
       menuListTreeCurrentChangeHandle (data, node) {
-        this.dataForm.parentId = data.menuId
-        this.dataForm.parentName = data.name
+        this.dataForm.parentId = data.id
       },
       // 菜单树设置当前选中节点
       menuListTreeSetCurrentNode () {
         this.$refs.menuListTree.setCurrentKey(this.dataForm.parentId)
-        this.dataForm.parentName = (this.$refs.menuListTree.getCurrentNode() || {})['name']
       },
       // 图标选中
       iconActiveHandle (iconName) {
@@ -185,13 +178,13 @@
               url: this.$http.adornUrl(`/sys/menu/${!this.dataForm.id ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData({
-                'menuId': this.dataForm.id || undefined,
-                'type': this.dataForm.type,
-                'name': this.dataForm.name,
+                'id': this.dataForm.id || undefined,
+                'permssionType': this.dataForm.permssionType,
+                'permissionName': this.dataForm.permissionName,
                 'parentId': this.dataForm.parentId,
-                'url': this.dataForm.url,
-                'perms': this.dataForm.perms,
-                'orderNum': this.dataForm.orderNum,
+                'permissionUrl': this.dataForm.permissionUrl,
+                'permissionStr': this.dataForm.permissionStr,
+                'permissionOrder': this.dataForm.permissionOrder,
                 'icon': this.dataForm.icon
               })
             }).then(({data}) => {

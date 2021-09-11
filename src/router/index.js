@@ -67,7 +67,7 @@ router.beforeEach((to, from, next) => {
       method: 'get',
       params: http.adornParams()
     }).then(({data}) => {
-      if (data && data.code === 0) {
+      if (data && data.code === 200) {
         fnAddDynamicMenuRoutes(data.menuList)
         router.options.isAddDynamicMenuRoutes = true
         sessionStorage.setItem('menuList', JSON.stringify(data.menuList || '[]'))
@@ -111,28 +111,28 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
   for (var i = 0; i < menuList.length; i++) {
     if (menuList[i].list && menuList[i].list.length >= 1) {
       temp = temp.concat(menuList[i].list)
-    } else if (menuList[i].url && /\S/.test(menuList[i].url)) {
-      menuList[i].url = menuList[i].url.replace(/^\//, '')
+    } else if (menuList[i].permissionUrl && /\S/.test(menuList[i].permissionUrl)) {
+      menuList[i].permissionUrl = menuList[i].permissionUrl.replace(/^\//, '')
       var route = {
-        path: menuList[i].url.replace('/', '-'),
+        path: menuList[i].permissionUrl.replace('/', '-'),
         component: null,
-        name: menuList[i].url.replace('/', '-'),
+        name: menuList[i].permissionUrl.replace('/', '-'),
         meta: {
-          menuId: menuList[i].menuId,
-          title: menuList[i].name,
+          menuId: menuList[i].id,
+          title: menuList[i].permissionName,
           isDynamic: true,
           isTab: true,
           iframeUrl: ''
         }
       }
       // url以http[s]://开头, 通过iframe展示
-      if (isURL(menuList[i].url)) {
-        route['path'] = `i-${menuList[i].menuId}`
-        route['name'] = `i-${menuList[i].menuId}`
-        route['meta']['iframeUrl'] = menuList[i].url
+      if (isURL(menuList[i].permissionUrl)) {
+        route['path'] = `i-${menuList[i].id}`
+        route['name'] = `i-${menuList[i].id}`
+        route['meta']['iframeUrl'] = menuList[i].permissionUrl
       } else {
         try {
-          route['component'] = _import(`modules/${menuList[i].url}`) || null
+          route['component'] = _import(`modules/${menuList[i].permissionUrl}`) || null
         } catch (e) {}
       }
       routes.push(route)

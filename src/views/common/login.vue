@@ -2,10 +2,6 @@
   <div class="site-wrapper site-page--login">
     <div class="site-content__wrapper">
       <div class="site-content">
-        <div class="brand-info">
-          <h2 class="brand-info__text">renren-fast-vue</h2>
-          <p class="brand-info__intro">renren-fast-vue基于vue、element-ui构建开发，实现renren-fast后台管理前端功能，提供一套更优的前端解决方案。</p>
-        </div>
         <div class="login-main">
           <h3 class="login-title">管理员登录</h3>
           <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" status-icon>
@@ -45,7 +41,7 @@
           userName: '',
           password: '',
           uuid: '',
-          captcha: ''
+          code: ''
         },
         dataRule: {
           userName: [
@@ -54,7 +50,7 @@
           password: [
             { required: true, message: '密码不能为空', trigger: 'blur' }
           ],
-          captcha: [
+          code: [
             { required: true, message: '验证码不能为空', trigger: 'blur' }
           ]
         },
@@ -70,16 +66,16 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.$http({
-              url: this.$http.adornUrl('/sys/login'),
+              url: this.$http.adornUrl('/login'),
               method: 'post',
               data: this.$http.adornData({
                 'username': this.dataForm.userName,
                 'password': this.dataForm.password,
                 'uuid': this.dataForm.uuid,
-                'captcha': this.dataForm.captcha
+                'code': this.dataForm.code
               })
             }).then(({data}) => {
-              if (data && data.code === 0) {
+              if (data && data.code === 200) {
                 this.$cookie.set('token', data.token)
                 this.$router.replace({ name: 'home' })
               } else {
@@ -93,7 +89,7 @@
       // 获取验证码
       getCaptcha () {
         this.dataForm.uuid = getUUID()
-        this.captchaPath = this.$http.adornUrl(`/captcha.jpg?uuid=${this.dataForm.uuid}`)
+        this.captchaPath = this.$http.adornUrl(`captcha/captchaImage?uuid=${this.dataForm.uuid}`)
       }
     }
   }

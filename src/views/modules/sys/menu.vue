@@ -8,21 +8,14 @@
 
     <el-table
       :data="dataList"
-      row-key="menuId"
+      row-key="id"
       border
       style="width: 100%; ">
       <el-table-column
-        prop="name"
+        prop="permissionName"
         header-align="center"
         min-width="150"
         label="名称" >
-      </el-table-column>
-      <el-table-column
-        prop="parentName"
-        header-align="center"
-        align="center"
-        width="120"
-        label="上级菜单">
       </el-table-column>
       <el-table-column
         header-align="center"
@@ -33,24 +26,24 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="type"
+        prop="permissionType"
         header-align="center"
         align="center"
         label="类型">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.type === 0" size="small">目录</el-tag>
-          <el-tag v-else-if="scope.row.type === 1" size="small" type="success">菜单</el-tag>
-          <el-tag v-else-if="scope.row.type === 2" size="small" type="info">按钮</el-tag>
+          <el-tag v-if="scope.row.permissionType === 'dictory'" size="small">目录</el-tag>
+          <el-tag v-else-if="scope.row.permissionType === 'menu'" size="small" type="success">菜单</el-tag>
+          <el-tag v-else-if="scope.row.permissionType === 'button'" size="small" type="info">按钮</el-tag>
         </template>
       </el-table-column>
       <el-table-column
-        prop="orderNum"
+        prop="permissionOrder"
         header-align="center"
         align="center"
         label="排序号">
       </el-table-column>
       <el-table-column
-        prop="url"
+        prop="permissionUrl"
         header-align="center"
         align="center"
         width="150"
@@ -58,7 +51,7 @@
         label="菜单URL">
       </el-table-column>
       <el-table-column
-        prop="perms"
+        prop="permissionStr"
         header-align="center"
         align="center"
         width="150"
@@ -72,8 +65,8 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button v-if="isAuth('sys:menu:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.menuId)">修改</el-button>
-          <el-button v-if="isAuth('sys:menu:delete')" type="text" size="small" @click="deleteHandle(scope.row.menuId)">删除</el-button>
+          <el-button v-if="isAuth('sys:menu:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
+          <el-button v-if="isAuth('sys:menu:delete')" type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -84,12 +77,11 @@
 
 <script>
   import AddOrUpdate from './menu-add-or-update'
-  import { treeDataTranslate } from '@/utils'
   export default {
     data () {
       return {
         dataForm: {},
-        dataList: [],
+        list: [],
         dataListLoading: false,
         addOrUpdateVisible: false
       }
@@ -109,8 +101,10 @@
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {
-          this.dataList = treeDataTranslate(data, 'menuId')
-          this.dataListLoading = false
+          if (data && data.code === 200) {
+            this.list = data
+            this.dataListLoading = false
+          }
         })
       },
       // 新增 / 修改
@@ -129,10 +123,10 @@
         }).then(() => {
           this.$http({
             url: this.$http.adornUrl(`/sys/menu/delete/${id}`),
-            method: 'post',
+            method: 'delete',
             data: this.$http.adornData()
           }).then(({data}) => {
-            if (data && data.code === 0) {
+            if (data && data.code === 200) {
               this.$message({
                 message: '操作成功',
                 type: 'success',

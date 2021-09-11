@@ -4,17 +4,20 @@
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
+      <el-form-item label="角色编码" prop="roleCode">
+        <el-input v-model="dataForm.roleCode" placeholder="角色编码"></el-input>
+      </el-form-item>
       <el-form-item label="角色名称" prop="roleName">
         <el-input v-model="dataForm.roleName" placeholder="角色名称"></el-input>
       </el-form-item>
-      <el-form-item label="备注" prop="remark">
-        <el-input v-model="dataForm.remark" placeholder="备注"></el-input>
+      <el-form-item label="角色描述" prop="roleDesc">
+        <el-input v-model="dataForm.roleDesc" placeholder="角色描述"></el-input>
       </el-form-item>
       <el-form-item size="mini" label="授权">
         <el-tree
           :data="menuList"
           :props="menuListTreeProps"
-          node-key="menuId"
+          node-key="id"
           ref="menuListTree"
           :default-expand-all="true"
           show-checkbox>
@@ -29,22 +32,25 @@
 </template>
 
 <script>
-  import { treeDataTranslate } from '@/utils'
   export default {
     data () {
       return {
         visible: false,
         menuList: [],
         menuListTreeProps: {
-          label: 'name',
+          label: 'permissionName',
           children: 'children'
         },
         dataForm: {
           id: 0,
+          roleCode: '',
           roleName: '',
-          remark: ''
+          roleDesc: ''
         },
         dataRule: {
+          roleCode: [
+            { required: true, message: '角色编码不能为空', trigger: 'blur' }
+          ],
           roleName: [
             { required: true, message: '角色名称不能为空', trigger: 'blur' }
           ]
@@ -60,7 +66,9 @@
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {
-          this.menuList = treeDataTranslate(data, 'menuId')
+          if (data && data.code === 200) {
+              this.menuList = data.list
+          }
         }).then(() => {
           this.visible = true
           this.$nextTick(() => {
@@ -74,14 +82,15 @@
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
-              if (data && data.code === 0) {
-                this.dataForm.roleName = data.role.roleName
-                this.dataForm.remark = data.role.remark
-                var idx = data.role.menuIdList.indexOf(this.tempKey)
+              if (data && data.code === 200) {
+                this.dataForm.roleCode = data.roleCode
+                this.dataForm.roleName = data.roleName
+                this.dataForm.roleDesc = data.roleDesc
+                var idx = data.sysPermissions.indexOf(this.tempKey)
                 if (idx !== -1) {
-                  data.role.menuIdList.splice(idx, data.role.menuIdList.length - idx)
+                  data.sysPermissions.splice(idx, data.sysPermissions.length - idx)
                 }
-                this.$refs.menuListTree.setCheckedKeys(data.role.menuIdList)
+                this.$refs.menuListTree.setCheckedKeys(data.sysPermissions)
               }
             })
           }
@@ -95,13 +104,14 @@
               url: this.$http.adornUrl(`/sys/role/${!this.dataForm.id ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData({
-                'roleId': this.dataForm.id || undefined,
+                'id': this.dataForm.id || undefined,
+                'roleCode': this.dataForm.roleCode,
                 'roleName': this.dataForm.roleName,
-                'remark': this.dataForm.remark,
-                'menuIdList': [].concat(this.$refs.menuListTree.getCheckedKeys(), [this.tempKey], this.$refs.menuListTree.getHalfCheckedKeys())
+                'roleDesc': this.dataForm.roleCode,
+                'sysPermissions': [].concat(this.$refs.menuListTree.getCheckedKeys(), [this.tempKey], this.$refs.menuListTree.getHalfCheckedKeys())
               })
             }).then(({data}) => {
-              if (data && data.code === 0) {
+              if (data && data.code === 200) {
                 this.$message({
                   message: '操作成功',
                   type: 'success',

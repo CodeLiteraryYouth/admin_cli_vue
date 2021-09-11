@@ -10,8 +10,8 @@
       <el-form-item label="密码" prop="password" :class="{ 'is-required': !dataForm.id }">
         <el-input v-model="dataForm.password" type="password" placeholder="密码"></el-input>
       </el-form-item>
-      <el-form-item label="确认密码" prop="comfirmPassword" :class="{ 'is-required': !dataForm.id }">
-        <el-input v-model="dataForm.comfirmPassword" type="password" placeholder="确认密码"></el-input>
+      <el-form-item label="真实姓名" prop="nickName">
+        <el-input v-model="dataForm.nickName" placeholder="真实姓名"></el-input>
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
         <el-input v-model="dataForm.email" placeholder="邮箱"></el-input>
@@ -19,15 +19,15 @@
       <el-form-item label="手机号" prop="mobile">
         <el-input v-model="dataForm.mobile" placeholder="手机号"></el-input>
       </el-form-item>
-      <el-form-item label="角色" size="mini" prop="roleIdList">
-        <el-checkbox-group v-model="dataForm.roleIdList">
-          <el-checkbox v-for="role in roleList" :key="role.roleId" :label="role.roleId">{{ role.roleName }}</el-checkbox>
+      <el-form-item label="角色" size="mini" prop="roles">
+        <el-checkbox-group v-model="dataForm.roles">
+          <el-checkbox v-for="role in roles" :key="role.id" :label="role.id">{{ role.roleName }}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="状态" size="mini" prop="status">
-        <el-radio-group v-model="dataForm.status">
-          <el-radio :label="0">禁用</el-radio>
-          <el-radio :label="1">正常</el-radio>
+      <el-form-item label="状态" size="mini" prop="locked">
+        <el-radio-group v-model="dataForm.locked">
+          <el-radio :label="true">禁用</el-radio>
+          <el-radio :label="false">正常</el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>
@@ -79,12 +79,12 @@
           id: 0,
           userName: '',
           password: '',
+          nickName: '',
           comfirmPassword: '',
-          salt: '',
           email: '',
           mobile: '',
           roleIdList: [],
-          status: 1
+          locked: false
         },
         dataRule: {
           userName: [
@@ -92,6 +92,9 @@
           ],
           password: [
             { validator: validatePassword, trigger: 'blur' }
+          ],
+          nickName: [
+            {required: true, message: '姓名不能为空', trigger: 'blur'}
           ],
           comfirmPassword: [
             { validator: validateComfirmPassword, trigger: 'blur' }
@@ -115,7 +118,7 @@
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {
-          this.roleList = data && data.code === 0 ? data.list : []
+          this.roles = data && data.code === 200 ? data.list : []
         }).then(() => {
           this.visible = true
           this.$nextTick(() => {
@@ -128,13 +131,13 @@
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
-              if (data && data.code === 0) {
-                this.dataForm.userName = data.user.username
-                this.dataForm.salt = data.user.salt
-                this.dataForm.email = data.user.email
-                this.dataForm.mobile = data.user.mobile
-                this.dataForm.roleIdList = data.user.roleIdList
-                this.dataForm.status = data.user.status
+              if (data && data.code === 200) {
+                this.dataForm.userName = data.username
+                this.dataForm.nickName = data.nickName
+                this.dataForm.email = data.email
+                this.dataForm.mobile = data.mobile
+                this.dataForm.roles = data.roles
+                this.dataForm.locked = data.locked
               }
             })
           }
@@ -148,14 +151,14 @@
               url: this.$http.adornUrl(`/sys/user/${!this.dataForm.id ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData({
-                'userId': this.dataForm.id || undefined,
+                'id': this.dataForm.id || undefined,
                 'username': this.dataForm.userName,
                 'password': this.dataForm.password,
-                'salt': this.dataForm.salt,
+                'nickName': this.dataForm.nickName,
                 'email': this.dataForm.email,
                 'mobile': this.dataForm.mobile,
-                'status': this.dataForm.status,
-                'roleIdList': this.dataForm.roleIdList
+                'locked': this.dataForm.locked,
+                'roles': this.dataForm.roles
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
