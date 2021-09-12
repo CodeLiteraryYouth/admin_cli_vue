@@ -67,7 +67,7 @@
           params: this.$http.adornParams()
         }).then(({data}) => {
           if (data && data.code === 200) {
-              this.menuList = data.list
+            this.menuList = data.list
           }
         }).then(() => {
           this.visible = true
