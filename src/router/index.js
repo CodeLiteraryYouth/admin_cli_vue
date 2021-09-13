@@ -39,7 +39,7 @@ const mainRoutes = {
     { path: '/demo-ueditor', component: _import('demo/ueditor'), name: 'demo-ueditor', meta: { title: 'demo-ueditor', isTab: true } }
   ],
   beforeEnter (to, from, next) {
-    let token = Vue.cookie.get('token')
+    let token = Vue.cookie.get('Authorization')
     if (!token || !/\S/.test(token)) {
       clearLoginInfo()
       next({ name: 'login' })
@@ -68,10 +68,10 @@ router.beforeEach((to, from, next) => {
       params: http.adornParams()
     }).then(({data}) => {
       if (data && data.code === 200) {
-        fnAddDynamicMenuRoutes(data.menuList)
+        fnAddDynamicMenuRoutes(data.data.menuList)
         router.options.isAddDynamicMenuRoutes = true
-        sessionStorage.setItem('menuList', JSON.stringify(data.menuList || '[]'))
-        sessionStorage.setItem('permissions', JSON.stringify(data.permissions || '[]'))
+        sessionStorage.setItem('menuList', JSON.stringify(data.data.menuList || '[]'))
+        sessionStorage.setItem('permissions', JSON.stringify(data.data.permissions || '[]'))
         next({ ...to, replace: true })
       } else {
         sessionStorage.setItem('menuList', '[]')
@@ -133,7 +133,9 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
       } else {
         try {
           route['component'] = _import(`modules/${menuList[i].permissionUrl}`) || null
-        } catch (e) {}
+        } catch (e) {
+          console.log(e)
+        }
       }
       routes.push(route)
     }

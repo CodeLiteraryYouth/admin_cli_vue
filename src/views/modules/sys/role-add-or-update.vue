@@ -67,7 +67,7 @@
           params: this.$http.adornParams()
         }).then(({data}) => {
           if (data && data.code === 200) {
-            this.menuList = data.list
+            this.menuList = data.data
           }
         }).then(() => {
           this.visible = true
@@ -83,14 +83,14 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 200) {
-                this.dataForm.roleCode = data.roleCode
-                this.dataForm.roleName = data.roleName
-                this.dataForm.roleDesc = data.roleDesc
-                var idx = data.sysPermissions.indexOf(this.tempKey)
+                this.dataForm.roleCode = data.data.roleCode
+                this.dataForm.roleName = data.data.roleName
+                this.dataForm.roleDesc = data.data.roleDesc
+                var idx = data.data.sysPermissions.indexOf(this.tempKey)
                 if (idx !== -1) {
-                  data.sysPermissions.splice(idx, data.sysPermissions.length - idx)
+                  data.data.sysPermissions.splice(idx, data.data.sysPermissions.length - idx)
                 }
-                this.$refs.menuListTree.setCheckedKeys(data.sysPermissions)
+                this.$refs.menuListTree.setCheckedKeys(data.data.sysPermissions)
               }
             })
           }

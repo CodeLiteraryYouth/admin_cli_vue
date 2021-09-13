@@ -133,8 +133,8 @@
           })
         }).then(({data}) => {
           if (data && data.code === 200) {
-            this.list = data.list
-            this.total = data.total
+            this.list = data.data.list
+            this.total = data.data.total
           } else {
             this.list = []
             this.total = 0

@@ -132,12 +132,12 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 200) {
-                this.dataForm.userName = data.username
-                this.dataForm.nickName = data.nickName
-                this.dataForm.email = data.email
-                this.dataForm.mobile = data.mobile
-                this.dataForm.roles = data.roles
-                this.dataForm.locked = data.locked
+                this.dataForm.userName = data.data.userName
+                this.dataForm.nickName = data.data.nickName
+                this.dataForm.email = data.data.email
+                this.dataForm.mobile = data.data.mobile
+                this.dataForm.roles = data.data.roles
+                this.dataForm.locked = data.data.locked
               }
             })
           }

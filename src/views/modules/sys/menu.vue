@@ -102,7 +102,7 @@
           params: this.$http.adornParams()
         }).then(({data}) => {
           if (data && data.code === 200) {
-            this.list = data
+            this.list = data.data
             this.dataListLoading = false
           }
         })

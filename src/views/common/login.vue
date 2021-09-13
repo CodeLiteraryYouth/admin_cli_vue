@@ -5,20 +5,20 @@
         <div class="login-main">
           <h3 class="login-title">管理员登录</h3>
           <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" status-icon>
-            <el-form-item prop="userName">
-              <el-input v-model="dataForm.userName" placeholder="帐号"></el-input>
+            <el-form-item prop="username">
+              <el-input v-model="dataForm.username" placeholder="帐号"></el-input>
             </el-form-item>
             <el-form-item prop="password">
               <el-input v-model="dataForm.password" type="password" placeholder="密码"></el-input>
             </el-form-item>
-            <el-form-item prop="captcha">
+            <el-form-item prop="code">
               <el-row :gutter="20">
                 <el-col :span="14">
-                  <el-input v-model="dataForm.captcha" placeholder="验证码">
+                  <el-input v-model="dataForm.code" placeholder="验证码">
                   </el-input>
                 </el-col>
                 <el-col :span="10" class="login-captcha">
-                  <img :src="captchaPath" @click="getCaptcha()" alt="">
+                  <img :src="code" @click="getCaptcha()" alt="">
                 </el-col>
               </el-row>
             </el-form-item>
@@ -38,13 +38,13 @@
     data () {
       return {
         dataForm: {
-          userName: '',
+          username: '',
           password: '',
           uuid: '',
           code: ''
         },
         dataRule: {
-          userName: [
+          username: [
             { required: true, message: '帐号不能为空', trigger: 'blur' }
           ],
           password: [
@@ -68,15 +68,18 @@
             this.$http({
               url: this.$http.adornUrl('/login'),
               method: 'post',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              },
               data: this.$http.adornData({
-                'username': this.dataForm.userName,
+                'username': this.dataForm.username,
                 'password': this.dataForm.password,
                 'uuid': this.dataForm.uuid,
                 'code': this.dataForm.code
-              })
+              }, true, 'form')
             }).then(({data}) => {
               if (data && data.code === 200) {
-                this.$cookie.set('token', data.token)
+                this.$cookie.set('Authorization', data.data)
                 this.$router.replace({ name: 'home' })
               } else {
                 this.getCaptcha()
@@ -89,7 +92,7 @@
       // 获取验证码
       getCaptcha () {
         this.dataForm.uuid = getUUID()
-        this.captchaPath = this.$http.adornUrl(`captcha/captchaImage?uuid=${this.dataForm.uuid}`)
+        this.code = this.$http.adornUrl(`captcha/captchaImage?uuid=${this.dataForm.uuid}`)
       }
     }
   }
