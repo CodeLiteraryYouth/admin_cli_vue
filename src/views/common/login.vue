@@ -18,7 +18,7 @@
                                     </el-input>
                                 </el-col>
                                 <el-col :span="10" class="login-captcha">
-                                    <img class="verification-code" :src="code" @click.native="getCaptcha()" alt="">
+                                    <img class="verification-code" :src="code" @click="getCaptcha" alt="">
                                 </el-col>
                             </el-row>
                         </el-form-item>
@@ -43,6 +43,7 @@
                     uuid: '',
                     code: ''
                 },
+                code: "",
                 dataRule: {
                     username: [
                         { required: true, message: '帐号不能为空', trigger: 'blur' }
@@ -91,8 +92,8 @@
             },
             // 获取验证码
             getCaptcha() {
-                this.dataForm.uuid = getUUID()
-                this.code = this.$http.adornUrl(`captcha/captchaImage?uuid=${this.dataForm.uuid}`)
+                this.dataForm.uuid = getUUID();
+                this.code = this.$http.adornUrl(`captcha/captchaImage?uuid=${this.dataForm.uuid}`);
             }
         }
     }
