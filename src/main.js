@@ -16,7 +16,7 @@ Vue.config.productionTip = false
 
 // 非生产环境, 适配mockjs模拟数据                 // api: https://github.com/nuysoft/Mock
 if (process.env.NODE_ENV !== 'production') {
-  require('@/mock')
+	require('@/mock')
 }
 
 // 挂载全局
@@ -28,9 +28,9 @@ window.SITE_CONFIG['storeState'] = cloneDeep(store.state)
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  store,
-  template: '<App/>',
-  components: { App }
+	el: '#app',
+	router,
+	store,
+	template: '<App/>',
+	components: { App }
 })
