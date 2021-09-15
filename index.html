@@ -9,8 +9,8 @@
     <% if (process.env.NODE_ENV === 'production') { %>
     <!-- 生产环境 -->
     <script>
-        document.write('<script src="./config/index.js?t=' + new Date().getTime() + '">
-    </script>');</script>
+        document.write('<script src="./config/index.js?t=' + new Date().getTime() + '"></script>');
+	</script>
     <% }else { %>
     <!-- 开发环境 -->
     <link rel="shortcut icon" type="image/x-icon" href="./static/img/favicon.ico">
@@ -20,6 +20,7 @@
     <script src="./static/plugins/ueditor-1.4.3.3/ueditor.config.js"></script>
     <script src="./static/plugins/ueditor-1.4.3.3/ueditor.all.min.js"></script>
     <script src="./static/plugins/ueditor-1.4.3.3/lang/zh-cn/zh-cn.js"></script>
+	<script src="./static/plugins/lodash-4.17.21/lodash.min.js"></script>
     <% } %>
 </head>
 
