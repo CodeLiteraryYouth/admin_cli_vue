@@ -55,7 +55,6 @@
             { required: true, message: '角色名称不能为空', trigger: 'blur' }
           ]
         },
-        tempKey: -666666 // 临时key, 用于解决tree半选中状态项不能传给后台接口问题. # 待优化
       }
     },
     methods: {
@@ -86,10 +85,6 @@
                 this.dataForm.roleCode = data.data.roleCode
                 this.dataForm.roleName = data.data.roleName
                 this.dataForm.roleDesc = data.data.roleDesc
-                var idx = data.data.sysPermissions.indexOf(this.tempKey)
-                if (idx !== -1) {
-                  data.data.sysPermissions.splice(idx, data.data.sysPermissions.length - idx)
-                }
                 this.$refs.menuListTree.setCheckedKeys(data.data.sysPermissions)
               }
             })
@@ -108,7 +103,7 @@
                 'roleCode': this.dataForm.roleCode,
                 'roleName': this.dataForm.roleName,
                 'roleDesc': this.dataForm.roleCode,
-                'sysPermissions': [].concat(this.$refs.menuListTree.getCheckedKeys(), [this.tempKey], this.$refs.menuListTree.getHalfCheckedKeys())
+                'permissionIds': [].concat(this.$refs.menuListTree.getCheckedKeys(), [this.tempKey], this.$refs.menuListTree.getHalfCheckedKeys())
               })
             }).then(({data}) => {
               if (data && data.code === 200) {

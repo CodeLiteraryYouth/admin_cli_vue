@@ -7,9 +7,6 @@
       <el-form-item label="用户名" prop="userName">
         <el-input v-model="dataForm.userName" placeholder="登录帐号"></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="password" :class="{ 'is-required': !dataForm.id }">
-        <el-input v-model="dataForm.password" type="password" placeholder="密码"></el-input>
-      </el-form-item>
       <el-form-item label="真实姓名" prop="nickName">
         <el-input v-model="dataForm.nickName" placeholder="真实姓名"></el-input>
       </el-form-item>
@@ -21,7 +18,7 @@
       </el-form-item>
       <el-form-item label="角色" size="mini" prop="roles">
         <el-checkbox-group v-model="dataForm.roles">
-          <el-checkbox v-for="role in roles" :key="role.id" :label="role.id">{{ role.roleName }}</el-checkbox>
+          <el-checkbox v-for="role in roles" :key="role.id" :label="role.roleCode">{{ role.roleName }}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="状态" size="mini" prop="locked">
@@ -83,7 +80,7 @@
           comfirmPassword: '',
           email: '',
           mobile: '',
-          roleIdList: [],
+          roles: [],
           locked: false
         },
         dataRule: {
@@ -118,7 +115,7 @@
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {
-          this.roles = data && data.code === 200 ? data.list : []
+          this.roles = data && data.code === 200 ? data.data : []
         }).then(() => {
           this.visible = true
           this.$nextTick(() => {
@@ -136,7 +133,7 @@
                 this.dataForm.nickName = data.data.nickName
                 this.dataForm.email = data.data.email
                 this.dataForm.mobile = data.data.mobile
-                this.dataForm.roles = data.data.roles
+                this.dataForm.roles = data.data.sysRoles
                 this.dataForm.locked = data.data.locked
               }
             })
@@ -152,7 +149,7 @@
               method: 'post',
               data: this.$http.adornData({
                 'id': this.dataForm.id || undefined,
-                'username': this.dataForm.userName,
+                'userName': this.dataForm.userName,
                 'password': this.dataForm.password,
                 'nickName': this.dataForm.nickName,
                 'email': this.dataForm.email,
@@ -161,7 +158,7 @@
                 'roles': this.dataForm.roles
               })
             }).then(({data}) => {
-              if (data && data.code === 0) {
+              if (data && data.code === 200) {
                 this.$message({
                   message: '操作成功',
                   type: 'success',

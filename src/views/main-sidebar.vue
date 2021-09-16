@@ -15,7 +15,7 @@
 						name="shouye"
 						class="site-sidebar__menu-icon"
 					></icon-svg>
-					<span slot="title">首页</span>
+					<span slot="title">仪表盘</span>
 				</el-menu-item>
 				<el-submenu index="listOfWorks">
 					<template slot="title">
