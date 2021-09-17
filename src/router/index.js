@@ -53,7 +53,11 @@ const mainRoutes = {
 		{ path: '/weeklyPracticeList', component: _import('modules/weeklyPractice/weekly-practice-list'), name: 'weeklyPracticeList', meta: { title: '周练列表', isTab: true } },
 		{ path: '/jobList', component: _import('modules/weeklyPractice/job-list'), name: 'jobList', meta: { title: '作业列表', isTab: true } },
 		{ path: '/toolList', component: _import('modules/toolManage/tool-list'), name: 'toolList', meta: { title: '工具列表', isTab: true } },
-		{ path: '/newsStory', component: _import('modules/toolManage/news-story'), name: 'newsStory', meta: { title: '新闻事迹', isTab: true } }
+		{ path: '/newsStory', component: _import('modules/toolManage/news-story'), name: 'newsStory', meta: { title: '新闻事迹', isTab: true } },
+		{ path: '/toolLabel', component: _import('modules/toolManage/tool-label'), name: 'toolLabel', meta: { title: '工具标签', isTab: true } },
+		{ path: '/downloadList', component: _import('modules/toolManage/download-list'), name: 'downloadList', meta: { title: '下载列表', isTab: true } },
+		{ path: '/downloadLabel', component: _import('modules/toolManage/download-label'), name: 'downloadLabel', meta: { title: '下载标签', isTab: true } }
+
   ]
 //   beforeEnter (to, from, next) {
 //     let token = Vue.cookie.get('Authorization')

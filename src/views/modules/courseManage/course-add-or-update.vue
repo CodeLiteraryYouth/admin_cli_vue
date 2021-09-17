@@ -33,7 +33,7 @@
     </el-form-item>
     <el-form-item label="课程类型" prop="types">
       <template>
-        <el-select v-model="dataForm.typeName" placeholder="请选择">
+        <el-select v-model="dataForm.typeId" placeholder="请选择">
           <el-option
             v-for="item in types"
             :key="item.id"
@@ -88,7 +88,8 @@
           ],
           coverUrl: [
             { required: true, message: '封面地址不能为空', trigger: 'blur' }
-          ]
+          ],
+
         }
       }
     },

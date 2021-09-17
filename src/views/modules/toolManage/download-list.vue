@@ -29,56 +29,40 @@
         label="ID">
       </el-table-column>
       <el-table-column
-        prop="jobTitle"
+        prop="name"
         header-align="center"
         align="center"
-        label="标题">
+        label="软件名">
       </el-table-column>
       <el-table-column
-        prop="jobDesc"
+        prop="downloadDesc"
         header-align="center"
         align="center"
-        label="描述">
+        label="软件描述">
       </el-table-column>
       <el-table-column
-        prop="jobTag"
+        prop="version"
         header-align="center"
         align="center"
-        label="标签">
+        label="软件版本">
       </el-table-column>
       <el-table-column
-        prop="jobContent"
+        prop="publishTime"
         header-align="center"
         align="center"
-        label="内容">
+        label="软件发布时间">
       </el-table-column>
       <el-table-column
-        prop="jobNum"
+        prop="size"
         header-align="center"
         align="center"
-        label="作品数量">
+        label="软件大小">
       </el-table-column>
       <el-table-column
-        prop="jobStatus"
+        prop="content"
         header-align="center"
         align="center"
-        label="周练状态">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.jobStatus === 1" size="small">学习中</el-tag>
-          <el-tag v-else-if="scope.row.jobStatus === 2" size="small" type="success">已结束</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="coverUrl"
-        header-align="center"
-        align="center"
-        label="封面地址">
-      </el-table-column>
-      <el-table-column
-        prop="viewNum"
-        header-align="center"
-        align="center"
-        label="浏览量">
+        label="软件下载信息">
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -107,7 +91,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './practicesjob-add-or-update'
+  import AddOrUpdate from './softwaredownload-add-or-update'
   export default {
     data () {
       return {
@@ -134,7 +118,7 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/practices/job/list'),
+          url: this.$http.adornUrl('download/list'),
           method: 'get',
           params: this.$http.adornParams({
             'pageNum': this.pageNum,
@@ -185,7 +169,7 @@
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.adornUrl('/practices/job/delete'),
+            url: this.$http.adornUrl('download/delete'),
             method: 'delete',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {

@@ -29,56 +29,16 @@
         label="ID">
       </el-table-column>
       <el-table-column
-        prop="jobTitle"
+        prop="typeCode"
         header-align="center"
         align="center"
-        label="标题">
+        label="编码">
       </el-table-column>
       <el-table-column
-        prop="jobDesc"
+        prop="typeName"
         header-align="center"
         align="center"
-        label="描述">
-      </el-table-column>
-      <el-table-column
-        prop="jobTag"
-        header-align="center"
-        align="center"
-        label="标签">
-      </el-table-column>
-      <el-table-column
-        prop="jobContent"
-        header-align="center"
-        align="center"
-        label="内容">
-      </el-table-column>
-      <el-table-column
-        prop="jobNum"
-        header-align="center"
-        align="center"
-        label="作品数量">
-      </el-table-column>
-      <el-table-column
-        prop="jobStatus"
-        header-align="center"
-        align="center"
-        label="周练状态">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.jobStatus === 1" size="small">学习中</el-tag>
-          <el-tag v-else-if="scope.row.jobStatus === 2" size="small" type="success">已结束</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="coverUrl"
-        header-align="center"
-        align="center"
-        label="封面地址">
-      </el-table-column>
-      <el-table-column
-        prop="viewNum"
-        header-align="center"
-        align="center"
-        label="浏览量">
+        label="名称">
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -107,7 +67,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './practicesjob-add-or-update'
+  import AddOrUpdate from './downloadtype-add-or-update'
   export default {
     data () {
       return {
@@ -134,7 +94,7 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/practices/job/list'),
+          url: this.$http.adornUrl('/download/type/list'),
           method: 'get',
           params: this.$http.adornParams({
             'pageNum': this.pageNum,
@@ -185,7 +145,7 @@
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.adornUrl('/practices/job/delete'),
+            url: this.$http.adornUrl('/download/type/delete'),
             method: 'delete',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {

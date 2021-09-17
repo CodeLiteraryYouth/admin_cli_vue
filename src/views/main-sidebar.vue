@@ -243,6 +243,36 @@
 						></icon-svg>
 						<span slot="title">工具列表</span>
 					</el-menu-item>
+          <el-menu-item
+						index="toolLabel"
+						@click="$router.push({ name: 'toolLabel' })"
+					>
+						<icon-svg
+							name="tubiao"
+							class="site-sidebar__menu-icon"
+						></icon-svg>
+						<span slot="title">工具标签</span>
+					</el-menu-item>
+          <el-menu-item
+						index="downloadList"
+						@click="$router.push({ name: 'downloadList' })"
+					>
+						<icon-svg
+							name="tubiao"
+							class="site-sidebar__menu-icon"
+						></icon-svg>
+						<span slot="title">下载列表</span>
+					</el-menu-item>
+          <el-menu-item
+						index="downloadLabel"
+						@click="$router.push({ name: 'downloadLabel' })"
+					>
+						<icon-svg
+							name="tubiao"
+							class="site-sidebar__menu-icon"
+						></icon-svg>
+						<span slot="title">下载标签</span>
+					</el-menu-item>
 					<el-menu-item
 						index="newsStory"
 						@click="$router.push({ name: 'newsStory' })"
