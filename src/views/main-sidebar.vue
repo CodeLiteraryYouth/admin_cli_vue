@@ -131,6 +131,10 @@
                         <icon-svg name="tubiao" class="site-sidebar__menu-icon"></icon-svg>
                         <span slot="title">新闻事迹</span>
                     </el-menu-item>
+                    <el-menu-item index="bannerList" @click="$router.push({ name: 'bannerList' })">
+                        <icon-svg name="tubiao" class="site-sidebar__menu-icon"></icon-svg>
+                        <span slot="title">banner列表</span>
+                    </el-menu-item>
                 </el-submenu>
                 <sub-menu v-for="menu in menuList" :key="menu.menuId" :menu="menu" :dynamicMenuRoutes="dynamicMenuRoutes">
                 </sub-menu>
