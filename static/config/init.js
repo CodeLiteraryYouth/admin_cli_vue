@@ -19,6 +19,8 @@
       window.SITE_CONFIG.cdnUrl + '/static/plugins/ueditor-1.4.3.3/ueditor.all.min.js',
       window.SITE_CONFIG.cdnUrl + '/static/plugins/ueditor-1.4.3.3/lang/zh-cn/zh-cn.js',
       window.SITE_CONFIG.cdnUrl + '/static/plugins/lodash-4.17.21/lodash.min.js',
+      window.SITE_CONFIG.cdnUrl + '/static/plugins/moment-2.29.1/moment2.29.1.min.js',
+      window.SITE_CONFIG.cdnUrl + '/static/plugins/wangEditor-3.1.1/wangEditor.min.js',
 	  // 业务
       window.SITE_CONFIG.cdnUrl + '/static/js/manifest.js',
       window.SITE_CONFIG.cdnUrl + '/static/js/vendor.js',

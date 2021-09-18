@@ -201,6 +201,7 @@
 						.mid{
 							font-size: 30px;
 							padding: 10px 0;
+							font-weight: 800;
 						}
 						.bot{
 							font-size: 14px;
