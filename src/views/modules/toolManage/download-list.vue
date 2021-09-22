@@ -118,7 +118,7 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('download/list'),
+          url: this.$http.adornUrl('/download/list'),
           method: 'get',
           params: this.$http.adornParams({
             'pageNum': this.pageNum,
@@ -169,7 +169,7 @@
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.adornUrl('download/delete'),
+            url: this.$http.adornUrl('/download/delete'),
             method: 'delete',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {
