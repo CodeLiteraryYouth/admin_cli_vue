@@ -71,9 +71,9 @@ const mainRoutes = {
 }
 
 const router = new Router({
-  mode: 'history',
-  scrollBehavior: () => ({ y: 0 }),
-  isAddDynamicMenuRoutes: true, // 是否已经添加动态(菜单)路由
+  // mode: 'history',
+  // scrollBehavior: () => ({ y: 0 }),
+  isAddDynamicMenuRoutes: false, // 是否已经添加动态(菜单)路由
   routes: globalRoutes.concat(mainRoutes)
 })
 
