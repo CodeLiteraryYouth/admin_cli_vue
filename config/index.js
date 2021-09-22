@@ -33,8 +33,8 @@ module.exports = {
 		// 代理列表, 是否开启代理通过[./dev.env.js]配置
 		proxyTable: devEnv.OPEN_PROXY === false ? {} : {
 			'/admin': {
-				target: 'http://localhost:8000/admin/',
-				// target: 'http://106.14.224.151:8000/admin/',
+				// target: 'http://localhost:8000/admin/',
+				target: 'http://106.14.224.151:8000/admin/',
 				changeOrigin: true,
 				pathRewrite: {
 					'^/admin': '/'
