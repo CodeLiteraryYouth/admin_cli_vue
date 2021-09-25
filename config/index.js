@@ -34,7 +34,7 @@ module.exports = {
 		proxyTable: devEnv.OPEN_PROXY === false ? {} : {
 			'/admin': {
 				// target: 'http://localhost:8000/admin/',
-				target: 'http://106.14.224.151:8000/admin/',
+				target: 'https://admin.tuuux.com/admin/',
 				changeOrigin: true,
 				pathRewrite: {
 					'^/admin': '/'
