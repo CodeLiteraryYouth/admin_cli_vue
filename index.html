@@ -9,8 +9,7 @@
     <% if (process.env.NODE_ENV === 'production') { %>
     <!-- 生产环境 -->
     <script>
-        // eslint-disable-next-line no-useless-escape
-        document.write('<script src="./static/config/index.js?t=' + new Date().getTime() + '"><\/script>')
+        document.write('<script src="static/config/index.js?t=' + new Date().getTime() + '"><\/script>')
 	  </script>
     <% }else { %>
     <!-- 开发环境 -->
