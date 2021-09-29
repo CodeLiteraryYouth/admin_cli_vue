@@ -136,6 +136,16 @@
                         <span slot="title">banner列表</span>
                     </el-menu-item>
                 </el-submenu>
+                <el-submenu index="orderManage"> 
+                    <template slot="title">
+                        <icon-svg name="shoucang" class="site-sidebar__menu-icon"></icon-svg>
+                        <span>订单管理</span>
+                    </template>
+                    <el-menu-item index="orderList" @click="$router.push({ name: 'orderList' })">
+                        <icon-svg name="tubiao" class="site-sidebar__menu-icon"></icon-svg>
+                        <span slot="title">订单列表</span>
+                    </el-menu-item>
+                </el-submenu>
                 <sub-menu v-for="menu in menuList" :key="menu.menuId" :menu="menu" :dynamicMenuRoutes="dynamicMenuRoutes">
                 </sub-menu>
             </el-menu>

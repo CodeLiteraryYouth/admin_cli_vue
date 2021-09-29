@@ -57,7 +57,9 @@ const mainRoutes = {
 		{ path: '/toolLabel', component: _import('modules/toolManage/tool-label'), name: 'toolLabel', meta: { title: '工具标签', isTab: true } },
 		{ path: '/downloadList', component: _import('modules/toolManage/download-list'), name: 'downloadList', meta: { title: '下载列表', isTab: true } },
 		{ path: '/downloadLabel', component: _import('modules/toolManage/download-label'), name: 'downloadLabel', meta: { title: '下载标签', isTab: true } },
-		{ path: '/bannerList', component: _import('modules/toolManage/banner-list'), name: 'bannerList', meta: { title: 'banner列表', isTab: true } }
+		{ path: '/bannerList', component: _import('modules/toolManage/banner-list'), name: 'bannerList', meta: { title: 'banner列表', isTab: true } },
+    { path: '/orderList', component: _import('modules/orderManage/order-list'), name: 'orderList', meta: { title: '订单列表', isTab: true } }
+
 
   ]
 //   beforeEnter (to, from, next) {

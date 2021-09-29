@@ -12,7 +12,14 @@
       :data="dataList"
       border
       v-loading="dataListLoading"
+      @selection-change="selectionChangeHandle"
       style="width: 100%;">
+      <el-table-column
+        type="selection"
+        header-align="center"
+        align="center"
+        width="50">
+      </el-table-column>
       <el-table-column
         prop="id"
         header-align="center"
@@ -20,93 +27,61 @@
         label="ID">
       </el-table-column>
       <el-table-column
-        prop="email"
+        prop="code"
         header-align="center"
         align="center"
-        label="邮箱地址">
+        label="订单号">
       </el-table-column>
       <el-table-column
-        prop="password"
+        prop="title"
         header-align="center"
         align="center"
-        label="注册密码">
+        label="商品名称">
       </el-table-column>
       <el-table-column
-        prop="nickName"
+        prop="skuType"
         header-align="center"
         align="center"
-        label="用户姓名">
-      </el-table-column>
-      <el-table-column
-        prop="avatarUrl"
-        header-align="center"
-        align="center"
-        label="用户头像">
-      </el-table-column>
-      <el-table-column
-        prop="country"
-        header-align="center"
-        align="center"
-        label="国家">
-      </el-table-column>
-      <el-table-column
-        prop="province"
-        header-align="center"
-        align="center"
-        label="省份">
-      </el-table-column>
-      <el-table-column
-        prop="city"
-        header-align="center"
-        align="center"
-        label="城市">
-      </el-table-column>
-      <el-table-column
-        prop="gender"
-        header-align="center"
-        align="center"
-        label="性别">
-      </el-table-column>
-      <el-table-column
-        prop="isMembers"
-        header-align="center"
-        align="center"
-        label="会员">
+        label="商品类型">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.isMembers === false" size="small">否</el-tag>
-          <el-tag v-else-if="scope.row.isMembers === true" size="small" type="success">是</el-tag>
+          <el-tag v-if="scope.row.skuType === 1" size="small">素材</el-tag>
+          <el-tag v-else-if="scope.row.skuType === 2" size="small" type="success">课程</el-tag>
         </template>
       </el-table-column>
       <el-table-column
-        prop="membersType"
+        prop="num"
         header-align="center"
         align="center"
-        label="会员类型">
+        label="商品数量">
+      </el-table-column>
+      <el-table-column
+        prop="amount"
+        header-align="center"
+        align="center"
+        label="订单总价格">
+      </el-table-column>
+      <el-table-column
+        prop="paymentType"
+        header-align="center"
+        align="center"
+        label="支付方式">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.membersType === 'VIDEO'" size="small">视频会员</el-tag>
-          <el-tag v-else-if="scope.row.membersType === 'MATERIAL'" size="small" type="success">素材会员</el-tag>
-          <el-tag v-else-if="scope.row.membersType === 'ALL'" size="small" type="success">全会员</el-tag>
+          <el-tag v-if="scope.row.paymentType === 1" size="small">现金</el-tag>
+          <el-tag v-else-if="scope.row.permissionType === 2" size="small" type="success">微信</el-tag>
+          <el-tag v-else-if="scope.row.permissionType === 3" size="small" type="info">支付宝</el-tag>
         </template>
       </el-table-column>
       <el-table-column
-        prop="event"
+        prop="status"
         header-align="center"
         align="center"
-        label="订阅状态">
+        label="订单状态">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.event === 'subscribe'" size="small">已关注</el-tag>
-          <el-tag v-else-if="scope.row.event === 'unsubscribe'" size="small">取消订阅</el-tag>
-          <el-tag v-else-if="scope.row.event === 'SCAN'" size="small" type="success">已关注</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="loginStatus"
-        header-align="center"
-        align="center"
-        label="登录状态">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.loginStatus === false" size="small">未登录</el-tag>
-          <el-tag v-else-if="scope.row.loginStatus === true" size="small">已登录</el-tag>
+          <el-tag v-if="scope.row.status === 1" size="small">待付款</el-tag>
+          <el-tag v-else-if="scope.row.status === 2" size="small" type="success">已付款</el-tag>
+          <el-tag v-else-if="scope.row.status === 3" size="small" type="info">已超时</el-tag>
+          <el-tag v-else-if="scope.row.status === 4" size="small" type="info">审核中</el-tag>
+          <el-tag v-else-if="scope.row.status === 5" size="small" type="info">已退款</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -114,6 +89,22 @@
         header-align="center"
         align="center"
         label="创建时间">
+      </el-table-column>
+      <el-table-column
+        prop="tradeNo"
+        header-align="center"
+        align="center"
+        label="交易流水号">
+      </el-table-column>
+      <el-table-column
+        fixed="right"
+        header-align="center"
+        align="center"
+        width="150"
+        label="操作">
+        <template slot-scope="scope">
+          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">退款通过</el-button>
+        </template>
       </el-table-column>
     </el-table>
     <el-pagination
@@ -140,6 +131,7 @@
         pageSize: 10,
         total: 0,
         dataListLoading: false,
+        dataListSelections: [],
         addOrUpdateVisible: false
       }
     },
@@ -151,7 +143,7 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/userinfo/list'),
+          url: this.$http.adornUrl('/order/list'),
           method: 'get',
           params: this.$http.adornParams({
             'pageNum': this.pageNum,
@@ -179,6 +171,17 @@
       currentChangeHandle (val) {
         this.pageNum = val
         this.getDataList()
+      },
+      // 多选
+      selectionChangeHandle (val) {
+        this.dataListSelections = val
+      },
+      // 新增 / 修改
+      addOrUpdateHandle (id) {
+        this.addOrUpdateVisible = true
+        this.$nextTick(() => {
+          this.$refs.addOrUpdate.init(id)
+        })
       }
     }
   }
