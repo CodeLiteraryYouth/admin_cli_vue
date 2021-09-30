@@ -29,12 +29,12 @@ module.exports = {
 
 		// Paths
 		assetsSubDirectory: 'static',
-		assetsPublicPath: '/',
+		assetsPublicPath: './',
 		// 代理列表, 是否开启代理通过[./dev.env.js]配置
 		proxyTable: devEnv.OPEN_PROXY === false ? {} : {
 			'/admin': {
-				target: 'http://localhost:8000/admin/',
-				// target: 'https://admin.tuuux.com/admin/',
+				// target: 'http://localhost:8000/admin/',
+				target: 'https://admin.tuuux.com/admin/',
 				changeOrigin: true,
 				pathRewrite: {
 					'^/admin': '/'
