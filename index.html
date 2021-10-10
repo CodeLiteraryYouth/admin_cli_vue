@@ -10,7 +10,8 @@
     <!-- 生产环境 -->
     <script>
         document.write('<script src="./static/config/index.js?t=' + new Date().getTime() + '"><\/script>')
-	  </script>
+        document.write('<script src="./static/config/init.js?t=' + new Date().getTime() + '"><\/script>')
+	</script>
     <% }else { %>
     <!-- 开发环境 -->
     <link rel="shortcut icon" type="image/x-icon" href="./static/img/favicon.ico">
