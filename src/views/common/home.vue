@@ -24,24 +24,24 @@
 		<div class="wrap-content">
 			<div class="top">
 				<el-tabs v-model="active" tab-position="top">
-					<el-tab-pane label="注册数" name="tab1">
-						<div class="echarts-wrap" v-if="active === 'tab1'"><v-echarts :option="echartsOption1" :loading="loading1"></v-echarts></div>
+					<el-tab-pane label="注册数" name="tab3">
+						<div class="echarts-wrap" v-if="active === 'tab3'"><v-echarts :option="echartsOption" :loading="loading1"></v-echarts></div>
 					</el-tab-pane>
 					<el-tab-pane label="日活数" name="tab2">
-						<div class="echarts-wrap" v-if="active === 'tab2'"><v-echarts :option="echartsOption1" :loading="loading2"></v-echarts></div>
+						<div class="echarts-wrap" v-if="active === 'tab2'"><v-echarts :option="echartsOption" :loading="loading2"></v-echarts></div>
 					</el-tab-pane>
-					<el-tab-pane label="作品总量" name="tab3">
-						<div class="echarts-wrap" v-if="active === 'tab3'"><v-echarts :option="echartsOption1" :loading="loading3"></v-echarts></div>
+					<el-tab-pane label="作品总量" name="tab1">
+						<div class="echarts-wrap" v-if="active === 'tab1'"><v-echarts :option="echartsOption" :loading="loading3"></v-echarts></div>
 					</el-tab-pane>
-					<el-tab-pane label="文章总量" name="tab4">
-						<div class="echarts-wrap" v-if="active === 'tab4'"><v-echarts :option="echartsOption1" :loading="loading4"></v-echarts></div>
+					<el-tab-pane label="文章总量" name="tab0">
+						<div class="echarts-wrap" v-if="active === 'tab0'"><v-echarts :option="echartsOption" :loading="loading4"></v-echarts></div>
 					</el-tab-pane>
 				</el-tabs>
 				<div class="postion">
-					<div :class="timeActive === 0 ? 'active' : ''" @click="">今日</div>
-					<div :class="timeActive === 1 ? 'active' : ''" @click="">本周</div>
-					<div :class="timeActive === 2 ? 'active' : ''" @click="">本月</div>
-					<div :class="timeActive === 3 ? 'active' : ''" @click="">全年</div>
+					<div :class="timeActive === 0 ? 'active' : ''" @click="timeActive = 0">今日</div>
+					<div :class="timeActive === 1 ? 'active' : ''" @click="timeActive = 1">本周</div>
+					<div :class="timeActive === 2 ? 'active' : ''" @click="timeActive = 2">本月</div>
+					<div :class="timeActive === 3 ? 'active' : ''" @click="timeActive = 3">全年</div>
 				</div>
 			</div>
 		</div>
@@ -50,6 +50,7 @@
 <script>
 	import VueCountUp from "@/components/CountUp/countUp";
 	import Echarts from "@/components/Echarts/Echarts";
+	import { getAllDateFromTwoDateBetween } from "@/utils";
 	export default {
 		components: {
 			"vue-count-up": VueCountUp,
@@ -97,9 +98,9 @@
 						countBot: 2000
 					}
 				],
-				active: "tab1",
+				active: "tab3",
 				timeActive: 1,
-				echartsOption1: {
+				echartsOption: {
 					title: {
 						text: '注册数'
 					},
@@ -126,7 +127,7 @@
 					xAxis: [
 						{
 							type: 'category',
-							data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+							data: [],
 							axisTick: {
 								alignWithLabel: true
 							}
@@ -142,30 +143,82 @@
 							name: '直接访问',
 							type: 'bar',
 							barWidth: '60%',
-							data: [10, 52, 200, 334, 390, 330, 220]
+							data: []
 						}
 					]
 				},
-				echartsOption2: {},
-				echartsOption3: {},
-				echartsOption4: {},
 				loading1: false,
 				loading2: false,
 				loading3: false,
 				loading4: false
 			}
 		},
-		computed: {
-
-		},
 		watch: {
-
+			active(n, o) {
+				this.get();
+			},
+			timeActive(n, o) {
+				this.get();
+			}
 		},
 		mounted() {
-
+			this.get();
 		},
 		methods: {
-
+			get() {
+				this.$http({
+					url: this.$http.adornUrl('/index/count'),
+					method: 'get',
+					params: this.$http.adornParams({
+						dateType: this.timeActive,
+						type: parseInt(this.active.replace("tab", ""))
+					})
+				}).then(({ data }) => {
+					if (data && data.code === 200) {
+						var { registerNum, uvNum, productNum, articleNum, itemVOS } = data.data;
+						this.items[0].countTop = registerNum;
+						this.items[1].countTop = uvNum;
+						this.items[2].countTop = productNum;
+						this.items[3].countTop = articleNum;
+						switch (this.active) {
+							case "tab0":
+								this.echartsOption.title.text = "注册数";
+								this.echartsOption.series[0].name = "注册数";
+								break;
+							case "tab1":
+								this.echartsOption.title.text = "日活数";
+								this.echartsOption.series[0].name = "日活数";
+								break;
+							case "tab2":
+								this.echartsOption.title.text = "作品总量";
+								this.echartsOption.series[0].name = "作品总量";
+								break;
+							case "tab3":
+								this.echartsOption.title.text = "文章总量";
+								this.echartsOption.series[0].name = "文章总量";
+								break;
+							default:
+								break;
+						}
+						switch (this.timeActive) {
+							case 0:
+								this.echartsOption.xAxis.data = [moment().format("YYYY-MM-DD")];
+								break;
+							case 1:
+								this.echartsOption.xAxis.data = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+								break;
+							case 2:
+								this.echartsOption.xAxis.data = getAllDateFromTwoDateBetween(moment().startOf('month').format("YYYY-MM-DD"), moment().endOf('month').format("YYYY-MM-DD"));
+								break;
+							case 3:
+								this.echartsOption.xAxis.data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+								break;
+							default:
+								break;
+						}
+					}
+				});
+			}
 		}
 	};
 </script>
