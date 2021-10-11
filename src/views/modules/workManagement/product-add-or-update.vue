@@ -1,7 +1,6 @@
 <template>
 	<div>
 		<el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-
             <el-form-item label="标题" prop="title">
                 <el-input v-model="dataForm.title" placeholder="标题"></el-input>
             </el-form-item>
@@ -110,7 +109,6 @@
 			this.init(this.$route.query.id);
 			const E = window.wangEditor;
 			this.editor = new E('#Editor');
-			console.log(this.editor)
 			// 配置菜单栏，设置不需要的菜单
 			this.editor.config.excludeMenus = ['image', 'video', 'code', 'table', 'todo'];
 			this.editor.config.height = 500;

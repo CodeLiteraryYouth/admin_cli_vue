@@ -186,6 +186,10 @@
                 },
                 set(val) {
 					if (val === "productAddOrUpdate") val = "listOfWorks";
+					if (val === "businesscooperationAddOrUpdate") val = "enterpriseCooperationList";
+					if (val === "bannerAddOrUpdate") val = "bannerList";
+					if (val === "softwaredownloadAddOrUpdate") val = "downloadList";
+					if (val === "newsstoryAddOrUpdate") val = "newsStory";
                     this.$store.commit("common/updateMenuActiveName", val);
                 }
             },

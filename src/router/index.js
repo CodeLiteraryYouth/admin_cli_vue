@@ -50,15 +50,19 @@ const mainRoutes = {
         { path: '/courseList', component: _import('modules/courseManage/course-list'), name: 'courseList', meta: { title: '课程列表', isTab: true } },
         { path: '/courseLabel', component: _import('modules/courseManage/course-label'), name: 'courseLabel', meta: { title: '课程标签', isTab: true } },
         { path: '/enterpriseCooperationList', component: _import('modules/enterpriseCooperation/enterprise-cooperation-list'), name: 'enterpriseCooperationList', meta: { title: '企业合作列表', isTab: true } },
+        { path: '/businesscooperationAddOrUpdate', component: _import('modules/enterpriseCooperation/businesscooperation-add-or-update'), name: 'businesscooperationAddOrUpdate', meta: { title: '新增企业合作列表', isTab: true } },
         { path: '/enterpriseCooperationLabel', component: _import('modules/enterpriseCooperation/enterprise-cooperation-label'), name: 'enterpriseCooperationLabel', meta: { title: '企业合作标签', isTab: true } },
         { path: '/weeklyPracticeList', component: _import('modules/weeklyPractice/weekly-practice-list'), name: 'weeklyPracticeList', meta: { title: '周练列表', isTab: true } },
         { path: '/jobList', component: _import('modules/weeklyPractice/job-list'), name: 'jobList', meta: { title: '作业列表', isTab: true } },
         { path: '/toolList', component: _import('modules/toolManage/tool-list'), name: 'toolList', meta: { title: '工具列表', isTab: true } },
         { path: '/newsStory', component: _import('modules/toolManage/news-story'), name: 'newsStory', meta: { title: '新闻事迹', isTab: true } },
+        { path: '/newsstoryAddOrUpdate', component: _import('modules/toolManage/newsstory-add-or-update'), name: 'newsstoryAddOrUpdate', meta: { title: '新增新闻事迹', isTab: true } },
         { path: '/toolLabel', component: _import('modules/toolManage/tool-label'), name: 'toolLabel', meta: { title: '工具标签', isTab: true } },
         { path: '/downloadList', component: _import('modules/toolManage/download-list'), name: 'downloadList', meta: { title: '下载列表', isTab: true } },
+        { path: '/softwaredownloadAddOrUpdate', component: _import('modules/toolManage/softwaredownload-add-or-update'), name: 'softwaredownloadAddOrUpdate', meta: { title: '新增软件下载信息', isTab: true } },
         { path: '/downloadLabel', component: _import('modules/toolManage/download-label'), name: 'downloadLabel', meta: { title: '下载标签', isTab: true } },
         { path: '/bannerList', component: _import('modules/toolManage/banner-list'), name: 'bannerList', meta: { title: 'banner列表', isTab: true } },
+        { path: '/bannerAddOrUpdate', component: _import('modules/toolManage/banner-add-or-update'), name: 'bannerAddOrUpdate', meta: { title: 'banner列表', isTab: true } },
         { path: '/orderList', component: _import('modules/orderManage/order-list'), name: 'orderList', meta: { title: '订单列表', isTab: true } }
     ]
 }
