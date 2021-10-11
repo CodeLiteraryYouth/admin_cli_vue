@@ -79,15 +79,11 @@
                         <icon-svg name="shoucang" class="site-sidebar__menu-icon"></icon-svg>
                         <span>企业合作</span>
                     </template>
-                    <el-menu-item index="enterpriseCooperationList" @click="
-							$router.push({ name: 'enterpriseCooperationList' })
-						">
+                    <el-menu-item index="enterpriseCooperationList" @click="$router.push({ name: 'enterpriseCooperationList' })">
                         <icon-svg name="tubiao" class="site-sidebar__menu-icon"></icon-svg>
                         <span slot="title">企业合作列表</span>
                     </el-menu-item>
-                    <el-menu-item index="enterpriseCooperationLabel" @click="
-							$router.push({ name: 'enterpriseCooperationLabel' })
-						">
+                    <el-menu-item index="enterpriseCooperationLabel" @click="$router.push({ name: 'enterpriseCooperationLabel' })">
                         <icon-svg name="tubiao" class="site-sidebar__menu-icon"></icon-svg>
                         <span slot="title">企业合作标签</span>
                     </el-menu-item>
@@ -136,7 +132,7 @@
                         <span slot="title">banner列表</span>
                     </el-menu-item>
                 </el-submenu>
-                <el-submenu index="orderManage"> 
+                <el-submenu index="orderManage">
                     <template slot="title">
                         <icon-svg name="shoucang" class="site-sidebar__menu-icon"></icon-svg>
                         <span>订单管理</span>
@@ -169,12 +165,12 @@
             sidebarLayoutSkin: {
                 get() {
                     return this.$store.state.common.sidebarLayoutSkin;
-                },
+                }
             },
             sidebarFold: {
                 get() {
                     return this.$store.state.common.sidebarFold;
-                },
+                }
             },
             menuList: {
                 get() {
@@ -182,15 +178,16 @@
                 },
                 set(val) {
                     this.$store.commit("common/updateMenuList", val);
-                },
+                }
             },
             menuActiveName: {
                 get() {
                     return this.$store.state.common.menuActiveName;
                 },
                 set(val) {
+					if (val === "productAddOrUpdate") val = "listOfWorks";
                     this.$store.commit("common/updateMenuActiveName", val);
-                },
+                }
             },
             mainTabs: {
                 get() {
@@ -198,7 +195,7 @@
                 },
                 set(val) {
                     this.$store.commit("common/updateMainTabs", val);
-                },
+                }
             },
             mainTabsActiveName: {
                 get() {
@@ -206,7 +203,7 @@
                 },
                 set(val) {
                     this.$store.commit("common/updateMainTabsActiveName", val);
-                },
+                }
             },
         },
         watch: {

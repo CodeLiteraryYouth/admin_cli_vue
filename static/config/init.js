@@ -14,10 +14,6 @@
             // 插件 - echarts
             window.SITE_CONFIG.cdnUrl + '/static/plugins/echarts-3.8.5/echarts.common.min.js',
             window.SITE_CONFIG.cdnUrl + '/static/plugins/echarts-3.8.5/walden.js',
-            // 插件 - ueditor
-            window.SITE_CONFIG.cdnUrl + '/static/plugins/ueditor-1.4.3.3/ueditor.config.js',
-            window.SITE_CONFIG.cdnUrl + '/static/plugins/ueditor-1.4.3.3/ueditor.all.min.js',
-            window.SITE_CONFIG.cdnUrl + '/static/plugins/ueditor-1.4.3.3/lang/zh-cn/zh-cn.js',
             window.SITE_CONFIG.cdnUrl + '/static/plugins/lodash-4.17.21/lodash.min.js',
             window.SITE_CONFIG.cdnUrl + '/static/plugins/moment-2.29.1/moment2.29.1.min.js',
             window.SITE_CONFIG.cdnUrl + '/static/plugins/wangEditor-3.1.1/wangEditor.min.js',
