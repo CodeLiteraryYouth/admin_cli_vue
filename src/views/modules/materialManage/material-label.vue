@@ -116,7 +116,7 @@
           })
         }).then(({data}) => {
           if (data && data.code === 200) {
-            this.dataList = data.data
+            this.dataList = data.data.list
             this.total = data.data.total
           } else {
             this.dataList = []

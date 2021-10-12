@@ -19,9 +19,6 @@
     <el-form-item label="资源用途" prop="resourcesUse">
       <el-input v-model="dataForm.resourcesUse" placeholder="资源用途"></el-input>
     </el-form-item>
-    <!-- <el-form-item label="文本内容" prop="text">
-      <el-input v-model="dataForm.text" placeholder="文本内容"></el-input>
-    </el-form-item> -->
     <el-form-item label="资源地址" prop="resourcesUrl">
       <el-input v-model="dataForm.resourcesUrl" placeholder="资源地址"></el-input>
     </el-form-item>
@@ -30,6 +27,18 @@
     </el-form-item>
     <el-form-item label="是否VIP" prop="free">
       <el-switch style="display:block" v-model="dataForm.free" active-color="#13ce66" placeholder="是否VIP"></el-switch>
+    </el-form-item>
+    <el-form-item label="资源类型" prop="types">
+      <template>
+        <el-select v-model="dataForm.typeIds" multiple placeholder="请选择">
+          <el-option
+            v-for="item in types"
+            :key="item.id"
+            :label="item.typeName"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </template>
     </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -54,7 +63,9 @@
           text: '',
           resourcesUrl: '',
           coverUrl: '',
-          free: ''
+          free: '',
+          types: [],
+          typeIds: []
         },
         dataRule: {
           title: [
@@ -87,9 +98,18 @@
     methods: {
       init (id) {
         this.dataForm.id = id || 0
-        this.visible = true
-        this.$nextTick(() => {
-          this.$refs['dataForm'].resetFields()
+        this.$http({
+          url: this.$http.adornUrl('/resources/type/list'),
+          method: 'get',
+          params: this.$http.adornParams()
+        }).then(({data}) => {
+          this.types = data && data.code === 200 ? data.data.list : []
+        }).then(() => {
+          this.visible = true
+          this.$nextTick(() => {
+            this.$refs['dataForm'].resetFields()
+          })
+        }).then(() => {
           if (this.dataForm.id) {
             this.$http({
               url: this.$http.adornUrl(`/resources/info/${this.dataForm.id}`),
@@ -128,7 +148,8 @@
                 'text': this.dataForm.text,
                 'resourcesUrl': this.dataForm.resourcesUrl,
                 'coverUrl': this.dataForm.coverUrl,
-                'free': this.dataForm.free
+                'free': this.dataForm.free,
+                'typeIds': this.dataForm.typeIds
               })
             }).then(({data}) => {
               if (data && data.code === 200) {
