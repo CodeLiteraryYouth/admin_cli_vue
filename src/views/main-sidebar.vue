@@ -190,6 +190,8 @@
 					if (val === "bannerAddOrUpdate") val = "bannerList";
 					if (val === "softwaredownloadAddOrUpdate") val = "downloadList";
 					if (val === "newsstoryAddOrUpdate") val = "newsStory";
+					if (val === "courseAddOrUpdate") val = "courseList";
+					if (val === "resourcesAddOrUpdate") val = "materialList";
                     this.$store.commit("common/updateMenuActiveName", val);
                 }
             },

@@ -25,6 +25,10 @@ const globalRoutes = [
 ]
 
 // 主入口路由(需嵌套上左右整体布局)
+// 通过meta对象设置路由展示方式
+// 1. isTab: 是否通过tab展示内容, true: 是, false: 否
+// 2. iframeUrl: 是否通过iframe嵌套展示内容, '以http[s]://开头': 是, '': 否
+// 提示: 如需要通过iframe嵌套展示内容, 但不通过tab打开, 请自行创建组件使用iframe处理!
 const mainRoutes = {
     path: '/',
     component: _import('main'),
@@ -32,10 +36,6 @@ const mainRoutes = {
     redirect: { name: 'home' },
     meta: { title: '主入口整体布局' },
     children: [
-        // 通过meta对象设置路由展示方式
-        // 1. isTab: 是否通过tab展示内容, true: 是, false: 否
-        // 2. iframeUrl: 是否通过iframe嵌套展示内容, '以http[s]://开头': 是, '': 否
-        // 提示: 如需要通过iframe嵌套展示内容, 但不通过tab打开, 请自行创建组件使用iframe处理!
         { path: '/home', component: _import('common/home'), name: 'home', meta: { title: '仪表盘' } },
         { path: '/listOfWorks', component: _import('modules/workManagement/list-of-works'), name: 'listOfWorks', meta: { title: '作品列表', isTab: true } },
         { path: '/productAddOrUpdate', component: _import('modules/workManagement/product-add-or-update'), name: 'productAddOrUpdate', meta: { title: '新增作品', isTab: true } },
@@ -46,8 +46,10 @@ const mainRoutes = {
         { path: '/clientUser', component: _import('modules/systemManage/client-user'), name: 'clientUser', meta: { title: '客户端用户', isTab: true } },
         { path: '/dictionaryParams', component: _import('modules/systemManage/dictionary-params'), name: 'dictionaryParams', meta: { title: '字典参数', isTab: true } },
         { path: '/materialList', component: _import('modules/materialManage/material-list'), name: 'materialList', meta: { title: '素材列表', isTab: true } },
+        { path: '/resourcesAddOrUpdate', component: _import('modules/materialManage/resources-add-or-update'), name: 'resourcesAddOrUpdate', meta: { title: '新增素材列表', isTab: true } },
         { path: '/materialLabel', component: _import('modules/materialManage/material-label'), name: 'materialLabel', meta: { title: '素材标签', isTab: true } },
         { path: '/courseList', component: _import('modules/courseManage/course-list'), name: 'courseList', meta: { title: '课程列表', isTab: true } },
+        { path: '/courseAddOrUpdate', component: _import('modules/courseManage/course-add-or-update'), name: 'courseAddOrUpdate', meta: { title: '新增课程列表', isTab: true } },
         { path: '/courseLabel', component: _import('modules/courseManage/course-label'), name: 'courseLabel', meta: { title: '课程标签', isTab: true } },
         { path: '/enterpriseCooperationList', component: _import('modules/enterpriseCooperation/enterprise-cooperation-list'), name: 'enterpriseCooperationList', meta: { title: '企业合作列表', isTab: true } },
         { path: '/businesscooperationAddOrUpdate', component: _import('modules/enterpriseCooperation/businesscooperation-add-or-update'), name: 'businesscooperationAddOrUpdate', meta: { title: '新增企业合作列表', isTab: true } },
