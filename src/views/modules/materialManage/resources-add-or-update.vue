@@ -35,6 +35,9 @@
 		<el-form-item label="素材内容">
 			<div id="Editor"></div>
 		</el-form-item>
+		<el-form-item>
+			<el-button type="primary" size="small" @click="dataFormSubmit">保存</el-button>
+		</el-form-item>
 	</el-form>
 </template>
 
