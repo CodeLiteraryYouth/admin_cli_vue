@@ -19,6 +19,9 @@
     <el-form-item label="扩展字段值" prop="extValue">
       <el-input v-model="dataForm.extValue" placeholder="扩展字段值"></el-input>
     </el-form-item>
+    <el-form-item label="扩展字段值1" prop="extValue1">
+      <el-input v-model="dataForm.extValue1" placeholder="扩展字段值1"></el-input>
+    </el-form-item>
     <el-form-item label="排序" prop="orderNum">
       <el-input v-model="dataForm.orderNum" placeholder="排序"></el-input>
     </el-form-item>
@@ -45,6 +48,7 @@
           code: '',
           value: '',
           extValue: '',
+          extValue1: '',
           orderNum: '',
           remark: '',
           createTime: ''
@@ -92,6 +96,7 @@
                 this.dataForm.code = data.data.code
                 this.dataForm.value = data.data.value
                 this.dataForm.extValue = data.data.extValue
+                this.dataForm.extValue1 = data.data.extValue1
                 this.dataForm.orderNum = data.data.orderNum
                 this.dataForm.remark = data.data.remark
               }
@@ -113,6 +118,7 @@
                 'code': this.dataForm.code,
                 'value': this.dataForm.value,
                 'extValue': this.dataForm.extValue,
+                'extValue1': this.dataForm.extValue1,
                 'orderNum': this.dataForm.orderNum,
                 'remark': this.dataForm.remark,
               })

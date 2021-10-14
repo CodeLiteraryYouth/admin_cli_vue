@@ -59,6 +59,12 @@
         label="扩展字段值">
       </el-table-column>
       <el-table-column
+        prop="extValue1"
+        header-align="center"
+        align="center"
+        label="扩展字段值1">
+      </el-table-column>
+      <el-table-column
         prop="orderNum"
         header-align="center"
         align="center"
