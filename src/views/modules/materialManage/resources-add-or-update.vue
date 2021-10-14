@@ -163,12 +163,13 @@
                                 this.$message({
                                     message: '操作成功',
                                     type: 'success',
-                                    duration: 1500,
-                                    onClose: () => {
-                                        this.visible = false
-                                        this.$emit('refreshDataList')
-                                    }
-                                })
+                                    duration: 1500
+                                });
+								setTimeout(() => {
+									this.$router.push({
+										path: "/materialList"
+									});
+								}, 1600);
                             } else {
                                 this.$message.error(data.msg)
                             }
