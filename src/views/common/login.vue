@@ -125,7 +125,7 @@ export default {
 						),
 					}).then(({ data }) => {
 						if (data && data.code === 200) {
-							this.$cookie.set("Authorization", data.data);
+							this.$cookie.set('Authorization', data.data);
 							this.$router.replace({ name: "home" });
 						} else {
 							this.getCaptcha();
@@ -139,7 +139,7 @@ export default {
 		getCaptcha() {
 			this.dataForm.uuid = getUUID();
 			this.code = this.$http.adornUrl(
-				`captcha/captchaImage?uuid=${this.dataForm.uuid}`
+				`/captcha/captchaImage?uuid=${this.dataForm.uuid}`
 			);
 		},
 	},

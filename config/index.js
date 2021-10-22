@@ -29,12 +29,12 @@ module.exports = {
 
 		// Paths
 		assetsSubDirectory: 'static',
-		assetsPublicPath: '/',
+		assetsPublicPath: './',
 		// 代理列表, 是否开启代理通过[./dev.env.js]配置
 		proxyTable: devEnv.OPEN_PROXY === false ? {} : {
 			'/admin': {
-				// target: 'http://localhost:8000/admin/',
-				target: 'https://admin.tuuux.com/admin/',
+				target: 'http://localhost:8000/admin/',
+				// target: 'https://admin.tuuux.com/admin/',
 				changeOrigin: true,
 				pathRewrite: {
 					'^/admin': '/'
@@ -43,7 +43,7 @@ module.exports = {
 		},
 
 		// Various Dev Server settings
-		host: getNetworkIp(), // can be overwritten by process.env.HOST
+		host: 'localhost', // can be overwritten by process.env.HOST
 		port: 8000, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
 		autoOpenBrowser: true,
 		errorOverlay: true,
