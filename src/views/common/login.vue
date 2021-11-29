@@ -123,10 +123,26 @@ export default {
 							true,
 							"form"
 						),
-					}).then(({ data }) => {
+					}).then(async ({ data }) => {
 						if (data && data.code === 200) {
 							this.$cookie.set('Authorization', data.data);
-							this.$router.replace({ name: "home" });
+							http({
+								url: http.adornUrl('/sys/menu/nav'),
+								method: 'get',
+								headers: {
+										"Content-Type": "application/x-www-form-urlencoded",
+								},
+								params: http.adornParams()
+								}).then(({data}) => {
+								if (data && data.code === 200) {
+									sessionStorage.setItem('menuList', JSON.stringify(data.data.menuList || '[]'))
+									sessionStorage.setItem('permissions', JSON.stringify(data.data.permissions || '[]'))
+									this.$store.commit('updateMenuList', data.data.menuList);
+									this.$router.push({
+										path: "/home",
+									});
+								}
+							})
 						} else {
 							this.getCaptcha();
 							this.$message.error(data.msg);
