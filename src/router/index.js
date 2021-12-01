@@ -26,25 +26,29 @@
    path: '/',
    component: _import('main'),
    name: 'main',
-   redirect: { name: 'login' },
+   redirect: { name: 'home' },
    meta: { title: '主入口整体布局' },
    children: [
      // 通过meta对象设置路由展示方式
      // 1. isTab: 是否通过tab展示内容, true: 是, false: 否
      // 2. iframeUrl: 是否通过iframe嵌套展示内容, '以http[s]://开头': 是, '': 否
      // 提示: 如需要通过iframe嵌套展示内容, 但不通过tab打开, 请自行创建组件使用iframe处理!
-     { path: '/home', component: _import('common/home'), name: 'home', meta: { title: '首页' } },
-     { path: '/userList', component: _import('modules/sys/sys-user'), name: 'userList', meta: { title: '系统用户', isTab: true } },
-     { path: '/menuManage', component: _import('modules/sys/sys-menu'), name: 'menuManage', meta: { title: '菜单管理', isTab: true } },
-     { path: '/roleManage', component: _import('modules/sys/sys-role'), name: 'roleManage', meta: { title: '角色管理', isTab: true } },
-     { path: '/dictionaryParams', component: _import('modules/sys/sys-dict'), name: 'dictionaryParams', meta: { title: '字典参数', isTab: true } }
-   ]
+     { path: '/home', component: _import('common/home'), name: 'home', meta: { title: '首页' } }
+   ],
+   beforeEnter (to, from, next) {
+    let token = Vue.cookie.get('Authorization')
+    if (!token || !/\S/.test(token)) {
+      clearLoginInfo()
+      next({ name: 'login' })
+    }
+    next()
+  }
  }
  
  const router = new Router({
    mode: 'hash',
-  //  scrollBehavior: () => ({ y: 0 }),
-   isAddDynamicMenuRoutes: true, // 是否已经添加动态(菜单)路由
+   scrollBehavior: () => ({ y: 0 }),
+   isAddDynamicMenuRoutes: false, // 是否已经添加动态(菜单)路由
    routes: globalRoutes.concat(mainRoutes)
  })
  
@@ -61,7 +65,7 @@
        params: http.adornParams()
      }).then(({data}) => {
        if (data && data.code === 200) {
-         fnAddDynamicMenuRoutes(data.menuList)
+         fnAddDynamicMenuRoutes(data.data.menuList)
          router.options.isAddDynamicMenuRoutes = true
          sessionStorage.setItem('menuList', JSON.stringify(data.data.menuList || '[]'))
          sessionStorage.setItem('permissions', JSON.stringify(data.data.permissions || '[]'))
@@ -110,7 +114,7 @@ function fnCurrentRouteType (route, globalRoutes = []) {
        menuList[i].permissionUrl = menuList[i].permissionUrl.replace(/^\//, '')
        var route = {
          path: menuList[i].permissionUrl,
-         component: menuList[i].component,
+         component: null,
          name: menuList[i].permissionUrl,
          meta: {
            menuId: menuList[i].id,

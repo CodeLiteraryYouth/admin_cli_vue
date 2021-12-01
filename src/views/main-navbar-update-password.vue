@@ -93,6 +93,7 @@
                             data: this.$http.adornData({
                                 password: this.dataForm.password,
                                 newPassword: this.dataForm.newPassword,
+                                confirmPassword: this.dataForm.confirmPassword
                             }),
                         }).then(({ data }) => {
                             if (data && data.code === 200) {

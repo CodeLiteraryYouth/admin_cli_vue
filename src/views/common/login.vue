@@ -102,9 +102,6 @@ export default {
 	methods: {
 		// 提交表单
 		dataFormSubmit() {
-			this.$router.push({
-				path: "/home",
-			});
 			this.$refs["dataForm"].validate((valid) => {
 				if (valid) {
 					this.$http({
@@ -123,29 +120,13 @@ export default {
 							true,
 							"form"
 						),
-					}).then(async ({ data }) => {
+					}).then(({ data }) => {
 						if (data && data.code === 200) {
 							this.$cookie.set('Authorization', data.data);
-							http({
-								url: http.adornUrl('/sys/menu/nav'),
-								method: 'get',
-								headers: {
-										"Content-Type": "application/x-www-form-urlencoded",
-								},
-								params: http.adornParams()
-								}).then(({data}) => {
-								if (data && data.code === 200) {
-									sessionStorage.setItem('menuList', JSON.stringify(data.data.menuList || '[]'))
-									sessionStorage.setItem('permissions', JSON.stringify(data.data.permissions || '[]'))
-									this.$store.commit('updateMenuList', data.data.menuList);
-									this.$router.push({
-										path: "/home",
-									});
-								}
-							})
+							this.$router.replace({ name: 'home' })
 						} else {
 							this.getCaptcha();
-							this.$message.error(data.msg);
+							this.$message.error(data.data);
 						}
 					});
 				}

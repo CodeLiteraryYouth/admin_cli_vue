@@ -96,7 +96,7 @@
                     if (data && data.code === 200) {
                         this.loading = false;
                         this.userId = data.data.id;
-                        this.userName = data.data.userName;
+                        this.userName = data.data.nickName;
                     }
                 });
             },
