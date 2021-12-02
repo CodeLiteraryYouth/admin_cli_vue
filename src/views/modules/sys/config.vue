@@ -48,6 +48,16 @@
         label="备注">
       </el-table-column>
       <el-table-column
+        prop="status"
+        header-align="center"
+        align="center"
+        label="状态">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.status === 0" size="small">隐藏</el-tag>
+          <el-tag v-if="scope.row.status === 1" size="small">显示</el-tag>
+        </template>  
+      </el-table-column>
+      <el-table-column
         fixed="right"
         header-align="center"
         align="center"
@@ -62,10 +72,10 @@
     <el-pagination
       @size-change="sizeChangeHandle"
       @current-change="currentChangeHandle"
-      :current-page="pageIndex"
+      :current-page="pageNum"
       :page-sizes="[10, 20, 50, 100]"
       :page-size="pageSize"
-      :total="totalPage"
+      :total="total"
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
@@ -79,12 +89,12 @@
     data () {
       return {
         dataForm: {
-          paramKey: ''
+          searchVal: ''
         },
         dataList: [],
-        pageIndex: 1,
+        pageNum: 1,
         pageSize: 10,
-        totalPage: 0,
+        total: 0,
         dataListLoading: false,
         dataListSelections: [],
         addOrUpdateVisible: false
@@ -104,17 +114,17 @@
           url: this.$http.adornUrl('/sys/config/list'),
           method: 'get',
           params: this.$http.adornParams({
-            'page': this.pageIndex,
-            'limit': this.pageSize,
-            'paramKey': this.dataForm.paramKey
+            'pageNum': this.pageNum,
+            'pageSize': this.pageSize,
+            'searchVal': this.dataForm.searchVal
           })
         }).then(({data}) => {
-          if (data && data.code === 0) {
-            this.dataList = data.page.list
-            this.totalPage = data.page.totalCount
+          if (data && data.code === 200) {
+            this.dataList = data.data.list
+            this.total = data.data.total
           } else {
             this.dataList = []
-            this.totalPage = 0
+            this.total = 0
           }
           this.dataListLoading = false
         })
@@ -122,12 +132,12 @@
       // 每页数
       sizeChangeHandle (val) {
         this.pageSize = val
-        this.pageIndex = 1
+        this.pageNum = 1
         this.getDataList()
       },
       // 当前页
       currentChangeHandle (val) {
-        this.pageIndex = val
+        this.pageNum = val
         this.getDataList()
       },
       // 多选
@@ -153,7 +163,7 @@
         }).then(() => {
           this.$http({
             url: this.$http.adornUrl('/sys/config/delete'),
-            method: 'post',
+            method: 'delete',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {
             if (data && data.code === 0) {

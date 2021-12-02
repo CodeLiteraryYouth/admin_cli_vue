@@ -58,6 +58,24 @@ export function clearLoginInfo() {
 }
 
 /**
+ * 获取已选中的树的id
+ * @param {*} menuTreeList 
+ * @returns 
+ */
+export function getCheckedIds(menuTreeList=[]) {
+    var result = []
+    for (var i= 0;i<menuTreeList.length;i++) {
+      result =result.concat(menuTreeList[i].id)
+      if (menuTreeList[i].children && menuTreeList[i].children.length >= 1) {
+         for (var j= 0 ;j<menuTreeList[i].children.length;j++) {
+            result =result.concat(menuTreeList[i].children[j].id)
+         }
+      }
+    }
+    return result;
+}
+
+/**
  * @description 获取两个时间之间的日期
  * @author CaoZM20132014
  * @date 2019-08-14

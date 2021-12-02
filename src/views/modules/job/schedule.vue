@@ -6,12 +6,12 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('sys:schedule:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('sys:schedule:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
-        <el-button v-if="isAuth('sys:schedule:pause')" type="danger" @click="pauseHandle()" :disabled="dataListSelections.length <= 0">批量暂停</el-button>
-        <el-button v-if="isAuth('sys:schedule:resume')" type="danger" @click="resumeHandle()" :disabled="dataListSelections.length <= 0">批量恢复</el-button>
-        <el-button v-if="isAuth('sys:schedule:run')" type="danger" @click="runHandle()" :disabled="dataListSelections.length <= 0">批量立即执行</el-button>
-        <el-button v-if="isAuth('sys:schedule:log')" type="success" @click="logHandle()">日志列表</el-button>
+        <el-button type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button type="danger" @click="pauseHandle()" :disabled="dataListSelections.length <= 0">批量暂停</el-button>
+        <el-button type="danger" @click="resumeHandle()" :disabled="dataListSelections.length <= 0">批量恢复</el-button>
+        <el-button type="danger" @click="runHandle()" :disabled="dataListSelections.length <= 0">批量立即执行</el-button>
+        <el-button type="success" @click="logHandle()">日志列表</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -34,16 +34,16 @@
         label="ID">
       </el-table-column>
       <el-table-column
-        prop="beanName"
+        prop="jobName"
         header-align="center"
         align="center"
-        label="bean名称">
+        label="任务名称">
       </el-table-column>
       <el-table-column
-        prop="params"
+        prop="jobGroup"
         header-align="center"
         align="center"
-        label="参数">
+        label="任务组名">
       </el-table-column>
       <el-table-column
         prop="cronExpression"
@@ -52,10 +52,32 @@
         label="cron表达式">
       </el-table-column>
       <el-table-column
-        prop="remark"
+        prop="invokeTarget"
         header-align="center"
         align="center"
-        label="备注">
+        label="调用目标方法">
+      </el-table-column>
+      <el-table-column
+        prop="misfirePolicy"
+        header-align="center"
+        align="center"
+        label="cron执行策略">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.misfirePolicy === 0 " size="small">默认</el-tag>
+          <el-tag v-else-if="scope.row.misfirePolicy === 1 " size="small">立即执行</el-tag>
+          <el-tag v-else-if="scope.row.misfirePolicy ===2 " size="small">触发一次执行</el-tag>
+          <el-tag v-else-if="scope.row.misfirePolicy ===3" size="small">不触发立即执行</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="concurrent"
+        header-align="center"
+        align="center"
+        label="是否并发执行">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.concurrent === 0" size="small">允许</el-tag>
+          <el-tag v-else size="small" type="danger">禁止</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         prop="status"
@@ -68,27 +90,33 @@
         </template>
       </el-table-column>
       <el-table-column
+        prop="remark"
+        header-align="center"
+        align="center"
+        label="备注">
+      </el-table-column>
+      <el-table-column
         fixed="right"
         header-align="center"
         align="center"
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button v-if="isAuth('sys:schedule:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.jobId)">修改</el-button>
-          <el-button v-if="isAuth('sys:schedule:delete')" type="text" size="small" @click="deleteHandle(scope.row.jobId)">删除</el-button>
-          <el-button v-if="isAuth('sys:schedule:pause')" type="text" size="small" @click="pauseHandle(scope.row.jobId)">暂停</el-button>
-          <el-button v-if="isAuth('sys:schedule:resume')" type="text" size="small" @click="resumeHandle(scope.row.jobId)">恢复</el-button>
-          <el-button v-if="isAuth('sys:schedule:run')" type="text" size="small" @click="runHandle(scope.row.jobId)">立即执行</el-button>
+          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.jobId)">修改</el-button>
+          <el-button type="text" size="small" @click="deleteHandle(scope.row.jobId)">删除</el-button>
+          <el-button type="text" size="small" @click="pauseHandle(scope.row.jobId)">暂停</el-button>
+          <el-button type="text" size="small" @click="resumeHandle(scope.row.jobId)">恢复</el-button>
+          <el-button type="text" size="small" @click="runHandle(scope.row.jobId)">立即执行</el-button>
         </template>
       </el-table-column>
     </el-table>
     <el-pagination
       @size-change="sizeChangeHandle"
       @current-change="currentChangeHandle"
-      :current-page="pageIndex"
+      :current-page="pageNum"
       :page-sizes="[10, 20, 50, 100]"
       :page-size="pageSize"
-      :total="totalPage"
+      :total="total"
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
@@ -105,12 +133,12 @@
     data () {
       return {
         dataForm: {
-          beanName: ''
+          jobName: ''
         },
         dataList: [],
-        pageIndex: 1,
+        pageNum: 1,
         pageSize: 10,
-        totalPage: 0,
+        total: 0,
         dataListLoading: false,
         dataListSelections: [],
         addOrUpdateVisible: false,
@@ -132,17 +160,17 @@
           url: this.$http.adornUrl('/sys/schedule/list'),
           method: 'get',
           params: this.$http.adornParams({
-            'page': this.pageIndex,
-            'limit': this.pageSize,
-            'beanName': this.dataForm.beanName
+            'pageNum': this.pageNum,
+            'pageSize': this.pageSize,
+            'jobName': this.dataForm.jobName
           })
         }).then(({data}) => {
-          if (data && data.code === 0) {
-            this.dataList = data.page.list
-            this.totalPage = data.page.totalCount
+          if (data && data.code === 200) {
+            this.dataList = data.data.list
+            this.total = data.data.total
           } else {
             this.dataList = []
-            this.totalPage = 0
+            this.total = 0
           }
           this.dataListLoading = false
         })
@@ -150,12 +178,12 @@
       // 每页数
       sizeChangeHandle (val) {
         this.pageSize = val
-        this.pageIndex = 1
+        this.pageNum = 1
         this.getDataList()
       },
       // 当前页
       currentChangeHandle (val) {
-        this.pageIndex = val
+        this.pageNum = val
         this.getDataList()
       },
       // 多选
@@ -181,10 +209,10 @@
         }).then(() => {
           this.$http({
             url: this.$http.adornUrl('/sys/schedule/delete'),
-            method: 'post',
+            method: 'delete',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {
-            if (data && data.code === 0) {
+            if (data && data.code === 200) {
               this.$message({
                 message: '操作成功',
                 type: 'success',

@@ -43,6 +43,16 @@
         label="排序号">
       </el-table-column>
       <el-table-column
+        prop="isView"
+        header-align="center"
+        align="center"
+        label="是否展示">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.isView === true" size="small">是</el-tag>
+          <el-tag v-else-if="scope.row.isView === false" size="small" type="success">否</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
         prop="permissionUrl"
         header-align="center"
         align="center"

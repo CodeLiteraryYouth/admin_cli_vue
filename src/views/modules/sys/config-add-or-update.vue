@@ -13,6 +13,12 @@
       <el-form-item label="备注" prop="remark">
         <el-input v-model="dataForm.remark" placeholder="备注"></el-input>
       </el-form-item>
+      <el-form-item label="显示状态" prop="status">
+        <template>
+            <el-radio v-model="dataForm.status" label="0">隐藏</el-radio>
+            <el-radio v-model="dataForm.status" label="1">显示</el-radio>
+        </template>
+      </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
@@ -30,7 +36,8 @@
           id: 0,
           paramKey: '',
           paramValue: '',
-          remark: ''
+          remark: '',
+          status: 0
         },
         dataRule: {
           paramKey: [
@@ -54,10 +61,11 @@
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
-              if (data && data.code === 0) {
-                this.dataForm.paramKey = data.config.paramKey
-                this.dataForm.paramValue = data.config.paramValue
-                this.dataForm.remark = data.config.remark
+              if (data && data.code === 200) {
+                this.dataForm.paramKey = data.data.paramKey
+                this.dataForm.paramValue = data.data.paramValue
+                this.dataForm.remark = data.data.remark
+                this.dataForm.status = data.data.status
               }
             })
           }
@@ -74,10 +82,11 @@
                 'id': this.dataForm.id || undefined,
                 'paramKey': this.dataForm.paramKey,
                 'paramValue': this.dataForm.paramValue,
-                'remark': this.dataForm.remark
+                'remark': this.dataForm.remark,
+                'status': this.dataForm.status
               })
             }).then(({data}) => {
-              if (data && data.code === 0) {
+              if (data && data.code === 200) {
                 this.$message({
                   message: '操作成功',
                   type: 'success',

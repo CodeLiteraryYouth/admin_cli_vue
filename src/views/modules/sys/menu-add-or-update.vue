@@ -12,7 +12,7 @@
       <el-form-item label="菜单名称" prop="permissionName">
         <el-input v-model="dataForm.permissionName" placeholder="菜单名称"></el-input>
       </el-form-item>
-      <el-form-item label="上级菜单" prop="parentId">
+      <el-form-item label="上级菜单" prop="parentName">
         <el-popover
           ref="menuListPopover"
           placement="bottom-start"
@@ -28,7 +28,7 @@
             :expand-on-click-node="false">
           </el-tree>
         </el-popover>
-        <el-input v-model="dataForm.parentId" v-popover:menuListPopover :readonly="true" placeholder="点击选择上级菜单" class="menu-list__input"></el-input>
+        <el-input v-model="dataForm.parentName" v-popover:menuListPopover :readonly="true" placeholder="点击选择上级菜单" class="menu-list__input"></el-input>
       </el-form-item>
       <el-form-item label="菜单路由" prop="permissionUrl">
         <el-input v-model="dataForm.permissionUrl" placeholder="菜单路由"></el-input>
@@ -39,7 +39,10 @@
       <el-form-item label="排序号" prop="permissionOrder">
         <el-input-number v-model="dataForm.permissionOrder" controls-position="right" :min="0" label="排序号"></el-input-number>
       </el-form-item>
-      <el-form-item v-if="dataForm.type !== 2" label="菜单图标" prop="icon">
+      <el-form-item label="是否展示" prop="isView">
+        <el-switch v-model="dataForm.isView" active-color="#13ce66" inactive-color=""></el-switch>
+      </el-form-item>
+      <el-form-item label="菜单图标" prop="icon">
         <el-row>
           <el-col :span="22">
             <el-popover
@@ -96,9 +99,11 @@
           typeList: ['目录', '菜单', '按钮'],
           permissionName: '',
           parentId: 0,
+          parentName: '',
           permissionUrl: '',
           permissionStr: '',
           permissionOrder: 0,
+          isView: '',
           icon: '',
           iconList: []
         },
@@ -150,10 +155,12 @@
               this.dataForm.permissionType = data.data.permissionType
               this.dataForm.permissionName = data.data.permissionName
               this.dataForm.parentId = data.data.parentId
+              this.dataForm.parentName = data.data.parentName
               this.dataForm.permissionUrl = data.data.permissionUrl
               this.dataForm.permissionStr = data.data.permissionStr
               this.dataForm.permissionOrder = data.data.permissionOrder
               this.dataForm.icon = data.data.icon
+              this.dataForm.isView = data.data.isView
               this.menuListTreeSetCurrentNode()
             })
           }
@@ -162,10 +169,13 @@
       // 菜单树选中
       menuListTreeCurrentChangeHandle (data, node) {
         this.dataForm.parentId = data.id
+        this.dataForm.parentName = data.permissionName
       },
       // 菜单树设置当前选中节点
       menuListTreeSetCurrentNode () {
         this.$refs.menuListTree.setCurrentKey(this.dataForm.parentId)
+        this.dataForm.parentName = (this.$refs.menuListTree.getCurrentNode() || {})['permissionName']
+
       },
       // 图标选中
       iconActiveHandle (iconName) {
@@ -186,7 +196,8 @@
                 'permissionUrl': this.dataForm.permissionUrl,
                 'permissionStr': this.dataForm.permissionStr,
                 'permissionOrder': this.dataForm.permissionOrder,
-                'icon': this.dataForm.icon
+                'icon': this.dataForm.icon,
+                'isView': this.dataForm.isView
               })
             }).then(({data}) => {
               if (data && data.code === 200) {

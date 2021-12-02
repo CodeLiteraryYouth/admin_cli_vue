@@ -32,6 +32,7 @@
 </template>
 
 <script>
+  import {getCheckedIds} from '@/utils/index'
   export default {
     data () {
       return {
@@ -58,6 +59,7 @@
       }
     },
     methods: {
+
       init (id) {
         this.dataForm.id = id || 0
         this.$http({
@@ -85,7 +87,7 @@
                 this.dataForm.roleCode = data.data.roleCode
                 this.dataForm.roleName = data.data.roleName
                 this.dataForm.roleDesc = data.data.roleDesc
-                this.$refs.menuListTree.setCheckedKeys(data.data.sysPermissions)
+                this.$refs.menuListTree.setCheckedKeys(getCheckedIds(data.data.sysPermissions))
               }
             })
           }
@@ -103,7 +105,7 @@
                 'roleCode': this.dataForm.roleCode,
                 'roleName': this.dataForm.roleName,
                 'roleDesc': this.dataForm.roleCode,
-                'permissionIds': [].concat(this.$refs.menuListTree.getCheckedKeys(), [this.tempKey], this.$refs.menuListTree.getHalfCheckedKeys())
+                'permissionIds': [].concat(this.$refs.menuListTree.getCheckedKeys(), this.$refs.menuListTree.getHalfCheckedKeys())
               })
             }).then(({data}) => {
               if (data && data.code === 200) {
